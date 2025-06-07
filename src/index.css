@@ -3,86 +3,79 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
+/* Design system ispirato al Lago di Garda e all'eleganza italiana */
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 220 15% 15%;
+    --background: 205 30% 98%;
+    --foreground: 205 20% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 15%;
+    --card-foreground: 205 20% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 15%;
+    --popover-foreground: 205 20% 10%;
 
-    --primary: 200 98% 39%;
+    --primary: 200 85% 45%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 200 20% 95%;
-    --secondary-foreground: 220 15% 15%;
+    --secondary: 205 25% 95%;
+    --secondary-foreground: 205 20% 15%;
 
-    --muted: 200 20% 95%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 205 25% 95%;
+    --muted-foreground: 205 15% 50%;
 
-    --accent: 200 20% 95%;
-    --accent-foreground: 220 15% 15%;
+    --accent: 205 25% 95%;
+    --accent-foreground: 205 20% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 200 98% 39%;
+    --border: 205 30% 88%;
+    --input: 205 30% 90%;
+    --ring: 200 85% 45%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Colori del Lago di Garda */
+    --garda-blue: 202 85% 55%;
+    --garda-deep: 205 80% 35%;
+    --garda-light: 195 75% 85%;
+    --garda-mist: 200 40% 96%;
+    --italian-gold: 45 85% 55%;
+    --olive-green: 85 35% 45%;
+    --sunset-orange: 25 85% 65%;
   }
 
   .dark {
-    --background: 220 25% 8%;
-    --foreground: 210 40% 98%;
+    --background: 205 25% 8%;
+    --foreground: 205 20% 95%;
 
-    --card: 220 25% 10%;
-    --card-foreground: 210 40% 98%;
+    --card: 205 25% 10%;
+    --card-foreground: 205 20% 95%;
 
-    --popover: 220 25% 10%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 205 25% 10%;
+    --popover-foreground: 205 20% 95%;
 
-    --primary: 200 98% 39%;
-    --primary-foreground: 220 25% 8%;
+    --primary: 200 85% 55%;
+    --primary-foreground: 205 25% 8%;
 
-    --secondary: 220 25% 15%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 205 25% 15%;
+    --secondary-foreground: 205 20% 90%;
 
-    --muted: 220 25% 15%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 205 25% 15%;
+    --muted-foreground: 205 20% 65%;
 
-    --accent: 220 25% 15%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 205 25% 15%;
+    --accent-foreground: 205 20% 90%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 220 25% 15%;
-    --input: 220 25% 15%;
-    --ring: 200 98% 39%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --garda-blue: 202 85% 65%;
+    --garda-deep: 205 80% 45%;
+    --garda-light: 195 60% 25%;
+    --garda-mist: 200 30% 15%;
+    --italian-gold: 45 85% 65%;
+    --olive-green: 85 35% 55%;
+    --sunset-orange: 25 85% 75%;
   }
 }
 
@@ -94,17 +87,156 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
 
-.gradient-bg {
-  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #8b5cf6 100%);
+/* Gradienti ispirati al Lago di Garda */
+.garda-gradient {
+  background: linear-gradient(135deg, 
+    hsl(var(--garda-light)) 0%, 
+    hsl(var(--garda-blue)) 40%, 
+    hsl(var(--garda-deep)) 100%);
 }
 
-.glass-effect {
-  backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+.garda-sunset {
+  background: linear-gradient(135deg, 
+    hsl(var(--sunset-orange)) 0%, 
+    hsl(var(--italian-gold)) 50%, 
+    hsl(var(--garda-blue)) 100%);
+}
+
+.garda-mist {
+  background: linear-gradient(135deg, 
+    hsl(var(--garda-mist)) 0%, 
+    rgba(255, 255, 255, 0.9) 50%, 
+    hsl(var(--garda-light)) 100%);
+}
+
+.italian-glass {
+  backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dark .italian-glass {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Animazioni eleganti italiane */
+@keyframes garda-wave {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% { 
+    transform: translateY(-10px) rotate(2deg);
+    opacity: 1;
+  }
+}
+
+@keyframes italian-bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-8px) scale(1.02);
+  }
+  60% {
+    transform: translateY(-4px) scale(1.01);
+  }
+}
+
+@keyframes elegant-slide {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-5px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+  }
+}
+
+.animate-garda-wave {
+  animation: garda-wave 3s ease-in-out infinite;
+}
+
+.animate-italian-bounce {
+  animation: italian-bounce 1s ease-out;
+}
+
+.animate-elegant-slide {
+  animation: elegant-slide 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.4), 
+    transparent);
+  background-size: 200px 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Effetti hover italiani */
+.italian-hover {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.italian-hover:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.garda-card {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(255, 255, 255, 0.7) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
 }
 
 .number-input::-webkit-outer-spin-button,
@@ -115,4 +247,19 @@
 
 .number-input[type=number] {
   -moz-appearance: textfield;
+}
+
+/* Stili per il testo elegante */
+.garda-title {
+  background: linear-gradient(135deg, 
+    hsl(var(--garda-deep)) 0%, 
+    hsl(var(--garda-blue)) 50%, 
+    hsl(var(--italian-gold)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.italian-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
