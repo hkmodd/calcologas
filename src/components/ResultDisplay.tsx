@@ -29,6 +29,10 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({
   const isBalanced = difference < 0.01;
   const consumptionMatches = Math.abs(actualTotalConsumption - totalConsumption) < 0.1;
 
+  const formatCurrency = (amount: number) => {
+    return amount.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   return (
     <Card className="italian-glass border-0 shadow-2xl animate-elegant-slide italian-hover">
       <CardHeader>
@@ -91,7 +95,7 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({
                 <div className="text-right">
                   <div className="flex items-center gap-2 text-3xl font-bold text-garda-deep">
                     <Euro className="w-7 h-7 text-italian-gold animate-float" />
-                    <span className="garda-title animate-shimmer">{result.amount.toFixed(2)}</span>
+                    <span className="garda-title animate-shimmer">{formatCurrency(result.amount)}</span>
                   </div>
                 </div>
               </div>
@@ -109,14 +113,14 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({
               </div>
               <div className="flex items-center gap-3 text-4xl font-black text-white">
                 <Euro className="w-8 h-8 animate-float" />
-                <span className="animate-shimmer">{totalCalculated.toFixed(2)}</span>
+                <span className="animate-shimmer">{formatCurrency(totalCalculated)}</span>
               </div>
             </div>
             <div className="text-right">
               <p className="text-white/90 text-lg mb-2">Bolletta Originale</p>
               <div className="flex items-center gap-3 text-3xl font-bold text-white/90">
                 <Euro className="w-6 h-6" />
-                <span>{totalBill.toFixed(2)}</span>
+                <span>{formatCurrency(totalBill)}</span>
               </div>
             </div>
           </div>
@@ -126,7 +130,7 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-white animate-shimmer" />
                 <p className="text-white text-lg">
-                  Differenza: €{difference.toFixed(2)}
+                  Differenza: €{formatCurrency(difference)}
                 </p>
               </div>
             </div>
@@ -160,7 +164,7 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({
                 <div>
                   <p className="text-red-800 font-bold text-xl mb-1">Differenza Rilevata</p>
                   <p className="text-red-700 text-lg">
-                    C'è una differenza di €{difference.toFixed(2)} tra il totale calcolato e la bolletta
+                    C'è una differenza di €{formatCurrency(difference)} tra il totale calcolato e la bolletta
                   </p>
                 </div>
               </>

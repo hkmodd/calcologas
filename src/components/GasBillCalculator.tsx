@@ -15,7 +15,7 @@ interface Person {
 }
 
 const GasBillCalculator = () => {
-  const [totalBill, setTotalBill] = useState<number>(550);
+  const [totalBill, setTotalBill] = useState<number>(1000000000);
   const [totalConsumption, setTotalConsumption] = useState<number>(353);
   const [people, setPeople] = useState<Person[]>([
     { id: '1', name: 'Bruno', consumption: 190 },
@@ -152,10 +152,10 @@ const GasBillCalculator = () => {
               {pricePerCubicMeter > 0 && (
                 <div className="garda-sunset p-6 rounded-2xl border-2 border-italian-gold/30 animate-elegant-slide" style={{ animationDelay: '0.8s' }}>
                   <p className="text-center text-xl font-bold text-white mb-2">
-                    Prezzo per m³: <span className="text-3xl font-black animate-shimmer">{pricePerCubicMeter.toFixed(4)}€</span>
+                    Prezzo per m³: <span className="text-3xl font-black animate-shimmer">{pricePerCubicMeter.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€</span>
                   </p>
                   <p className="text-center text-white/90 text-lg">
-                    {totalBill}€ ÷ {totalConsumption}m³ = {pricePerCubicMeter.toFixed(4)}€/m³
+                    {totalBill.toLocaleString('it-IT')}€ ÷ {totalConsumption}m³ = {pricePerCubicMeter.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€/m³
                   </p>
                 </div>
               )}
