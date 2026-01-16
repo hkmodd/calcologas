@@ -24,7 +24,8 @@ const variantMap = {
   sunset: 'garda-sunset',
 };
 
-export const LuxuryIcon: React.FC<LuxuryIconProps> = ({
+
+export const LuxuryIcon: React.FC<LuxuryIconProps> = React.memo(({
   icon: Icon,
   size = 'md',
   variant = 'gold',
@@ -39,11 +40,11 @@ export const LuxuryIcon: React.FC<LuxuryIconProps> = ({
       className={`relative ${className}`}
       initial={{ scale: 0, rotate: -180 }}
       animate={{ scale: 1, rotate: 0 }}
-      transition={{ 
-        type: "spring", 
-        stiffness: 200, 
+      transition={{
+        type: "spring",
+        stiffness: 200,
         damping: 15,
-        delay: 0.2 
+        delay: 0.2
       }}
     >
       {/* Anelli di glow animati */}
@@ -52,11 +53,11 @@ export const LuxuryIcon: React.FC<LuxuryIconProps> = ({
           <motion.div
             className={`absolute inset-0 ${container} rounded-full`}
             style={{
-              background: variant === 'gold' 
+              background: variant === 'gold'
                 ? 'radial-gradient(circle, rgba(255, 200, 50, 0.3) 0%, transparent 70%)'
                 : variant === 'garda'
-                ? 'radial-gradient(circle, rgba(59, 180, 246, 0.3) 0%, transparent 70%)'
-                : 'radial-gradient(circle, rgba(255, 100, 50, 0.3) 0%, transparent 70%)',
+                  ? 'radial-gradient(circle, rgba(59, 180, 246, 0.3) 0%, transparent 70%)'
+                  : 'radial-gradient(circle, rgba(255, 100, 50, 0.3) 0%, transparent 70%)',
             }}
             animate={{
               scale: [1, 1.5, 1],
@@ -67,11 +68,11 @@ export const LuxuryIcon: React.FC<LuxuryIconProps> = ({
           <motion.div
             className={`absolute inset-0 ${container} rounded-full border-2`}
             style={{
-              borderColor: variant === 'gold' 
+              borderColor: variant === 'gold'
                 ? 'rgba(255, 200, 50, 0.3)'
                 : variant === 'garda'
-                ? 'rgba(59, 180, 246, 0.3)'
-                : 'rgba(255, 100, 50, 0.3)',
+                  ? 'rgba(59, 180, 246, 0.3)'
+                  : 'rgba(255, 100, 50, 0.3)',
             }}
             animate={{
               scale: [1, 2, 1],
@@ -81,7 +82,7 @@ export const LuxuryIcon: React.FC<LuxuryIconProps> = ({
           />
         </>
       )}
-      
+
       {/* Container principale */}
       <motion.div
         className={`relative ${container} ${gradient} rounded-full flex items-center justify-center shadow-2xl`}
@@ -89,11 +90,11 @@ export const LuxuryIcon: React.FC<LuxuryIconProps> = ({
           boxShadow: variant === 'gold'
             ? '0 10px 40px rgba(255, 200, 50, 0.4), inset 0 -2px 10px rgba(0, 0, 0, 0.2), inset 0 2px 10px rgba(255, 255, 255, 0.3)'
             : variant === 'garda'
-            ? '0 10px 40px rgba(59, 180, 246, 0.4), inset 0 -2px 10px rgba(0, 0, 0, 0.2), inset 0 2px 10px rgba(255, 255, 255, 0.3)'
-            : '0 10px 40px rgba(255, 100, 50, 0.4), inset 0 -2px 10px rgba(0, 0, 0, 0.2), inset 0 2px 10px rgba(255, 255, 255, 0.3)',
+              ? '0 10px 40px rgba(59, 180, 246, 0.4), inset 0 -2px 10px rgba(0, 0, 0, 0.2), inset 0 2px 10px rgba(255, 255, 255, 0.3)'
+              : '0 10px 40px rgba(255, 100, 50, 0.4), inset 0 -2px 10px rgba(0, 0, 0, 0.2), inset 0 2px 10px rgba(255, 255, 255, 0.3)',
         }}
-        whileHover={{ 
-          scale: 1.1, 
+        whileHover={{
+          scale: 1.1,
           rotate: [0, -5, 5, 0],
           transition: { duration: 0.3 }
         }}
@@ -108,4 +109,4 @@ export const LuxuryIcon: React.FC<LuxuryIconProps> = ({
       </motion.div>
     </motion.div>
   );
-};
+});

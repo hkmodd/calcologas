@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -47,7 +46,7 @@
     --garda-deep: 210 90% 25%;
     --garda-light: 195 85% 75%;
     --garda-mist: 200 30% 90%;
-    
+
     /* Italian Luxury Palette */
     --italian-gold: 45 100% 55%;
     --italian-gold-light: 45 100% 70%;
@@ -58,7 +57,7 @@
     --champagne: 40 40% 85%;
     --platinum: 220 10% 75%;
     --diamond: 200 100% 90%;
-    
+
     /* Premium Effects */
     --glass-bg: rgba(255, 255, 255, 0.03);
     --glass-border: rgba(255, 255, 255, 0.08);
@@ -84,9 +83,9 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: radial-gradient(ellipse 80% 50% at 50% -20%, 
-      hsl(200 85% 20% / 0.4) 0%, 
-      hsl(220 25% 3%) 100%);
+    background: radial-gradient(ellipse 80% 50% at 50% -20%,
+        hsl(200 85% 20% / 0.4) 0%,
+        hsl(220 25% 3%) 100%);
     min-height: 100vh;
   }
 }
@@ -101,12 +100,12 @@
 
 .luxury-title {
   font-family: 'Playfair Display', Georgia, serif;
-  background: linear-gradient(135deg, 
-    hsl(var(--italian-gold)) 0%, 
-    hsl(var(--champagne)) 25%,
-    hsl(var(--italian-gold)) 50%,
-    hsl(var(--italian-gold-light)) 75%,
-    hsl(var(--italian-gold)) 100%);
+  background: linear-gradient(135deg,
+      hsl(var(--italian-gold)) 0%,
+      hsl(var(--champagne)) 25%,
+      hsl(var(--italian-gold)) 50%,
+      hsl(var(--italian-gold-light)) 75%,
+      hsl(var(--italian-gold)) 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -117,11 +116,11 @@
 }
 
 .garda-title {
-  background: linear-gradient(135deg, 
-    hsl(var(--garda-light)) 0%, 
-    hsl(var(--garda-blue)) 30%,
-    hsl(var(--italian-gold)) 70%,
-    hsl(var(--garda-light)) 100%);
+  background: linear-gradient(135deg,
+      hsl(var(--garda-light)) 0%,
+      hsl(var(--garda-blue)) 30%,
+      hsl(var(--italian-gold)) 70%,
+      hsl(var(--garda-light)) 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -134,51 +133,51 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .glass-ultra {
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.05) 0%, 
-    rgba(255, 255, 255, 0.02) 100%);
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.02) 100%);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.05) inset,
     0 0 80px rgba(59, 180, 246, 0.05);
 }
 
 .glass-gold {
-  background: linear-gradient(135deg, 
-    rgba(255, 200, 50, 0.08) 0%, 
-    rgba(255, 200, 50, 0.02) 100%);
+  background: linear-gradient(135deg,
+      rgba(255, 200, 50, 0.08) 0%,
+      rgba(255, 200, 50, 0.02) 100%);
   backdrop-filter: blur(30px) saturate(150%);
   -webkit-backdrop-filter: blur(30px) saturate(150%);
   border: 1px solid rgba(255, 200, 50, 0.15);
-  box-shadow: 
+  box-shadow:
     0 8px 40px rgba(255, 200, 50, 0.15),
     0 0 0 1px rgba(255, 200, 50, 0.1) inset;
 }
 
 .italian-glass {
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.06) 0%, 
-    rgba(255, 255, 255, 0.02) 100%);
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.02) 100%);
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
+  box-shadow:
     0 25px 50px -12px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.05) inset;
 }
 
 .garda-card {
-  background: linear-gradient(135deg, 
-    rgba(59, 180, 246, 0.08) 0%, 
-    rgba(255, 255, 255, 0.03) 50%,
-    rgba(255, 200, 50, 0.05) 100%);
+  background: linear-gradient(135deg,
+      rgba(59, 180, 246, 0.08) 0%,
+      rgba(255, 255, 255, 0.03) 50%,
+      rgba(255, 200, 50, 0.05) 100%);
   backdrop-filter: blur(20px) saturate(150%);
   -webkit-backdrop-filter: blur(20px) saturate(150%);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
+  box-shadow:
     0 10px 40px rgba(0, 0, 0, 0.25),
     0 0 0 1px rgba(255, 255, 255, 0.05) inset;
 }
@@ -188,36 +187,36 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .garda-gradient {
-  background: linear-gradient(135deg, 
-    hsl(var(--garda-deep)) 0%, 
-    hsl(var(--garda-blue)) 50%, 
-    hsl(var(--garda-light)) 100%);
+  background: linear-gradient(135deg,
+      hsl(var(--garda-deep)) 0%,
+      hsl(var(--garda-blue)) 50%,
+      hsl(var(--garda-light)) 100%);
 }
 
 .garda-sunset {
-  background: linear-gradient(135deg, 
-    hsl(var(--sunset-orange)) 0%, 
-    hsl(var(--sunset-pink)) 30%,
-    hsl(var(--italian-gold)) 70%, 
-    hsl(var(--garda-blue)) 100%);
+  background: linear-gradient(135deg,
+      hsl(var(--sunset-orange)) 0%,
+      hsl(var(--sunset-pink)) 30%,
+      hsl(var(--italian-gold)) 70%,
+      hsl(var(--garda-blue)) 100%);
 }
 
 .gold-gradient {
-  background: linear-gradient(135deg, 
-    hsl(var(--italian-gold-dark)) 0%, 
-    hsl(var(--italian-gold)) 30%, 
-    hsl(var(--champagne)) 50%,
-    hsl(var(--italian-gold)) 70%, 
-    hsl(var(--italian-gold-dark)) 100%);
+  background: linear-gradient(135deg,
+      hsl(var(--italian-gold-dark)) 0%,
+      hsl(var(--italian-gold)) 30%,
+      hsl(var(--champagne)) 50%,
+      hsl(var(--italian-gold)) 70%,
+      hsl(var(--italian-gold-dark)) 100%);
 }
 
 .premium-gradient {
-  background: linear-gradient(135deg, 
-    hsl(220 25% 8%) 0%,
-    hsl(220 25% 12%) 25%,
-    hsl(210 30% 15%) 50%,
-    hsl(220 25% 10%) 75%,
-    hsl(220 25% 5%) 100%);
+  background: linear-gradient(135deg,
+      hsl(220 25% 8%) 0%,
+      hsl(220 25% 12%) 25%,
+      hsl(210 30% 15%) 50%,
+      hsl(220 25% 10%) 75%,
+      hsl(220 25% 5%) 100%);
 }
 
 .luxury-border {
@@ -230,13 +229,13 @@
   inset: 0;
   padding: 1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, 
-    rgba(255, 200, 50, 0.5) 0%, 
-    rgba(255, 255, 255, 0.1) 30%,
-    rgba(59, 180, 246, 0.3) 70%,
-    rgba(255, 200, 50, 0.5) 100%);
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
+  background: linear-gradient(135deg,
+      rgba(255, 200, 50, 0.5) 0%,
+      rgba(255, 255, 255, 0.1) 30%,
+      rgba(59, 180, 246, 0.3) 70%,
+      rgba(255, 200, 50, 0.5) 100%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -248,35 +247,50 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @keyframes gold-shimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes float-premium {
-  0%, 100% { 
-    transform: translateY(0) rotate(0deg); 
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
     filter: drop-shadow(0 10px 30px rgba(255, 200, 50, 0.3));
   }
-  25% { 
+
+  25% {
     transform: translateY(-15px) rotate(2deg);
     filter: drop-shadow(0 20px 40px rgba(255, 200, 50, 0.5));
   }
-  75% { 
+
+  75% {
     transform: translateY(-8px) rotate(-1deg);
     filter: drop-shadow(0 15px 35px rgba(255, 200, 50, 0.4));
   }
 }
 
 @keyframes glow-breathe {
-  0%, 100% { 
-    box-shadow: 
+
+  0%,
+  100% {
+    box-shadow:
       0 0 30px rgba(255, 200, 50, 0.3),
       0 0 60px rgba(255, 200, 50, 0.1),
       inset 0 0 20px rgba(255, 200, 50, 0.05);
   }
-  50% { 
-    box-shadow: 
+
+  50% {
+    box-shadow:
       0 0 50px rgba(255, 200, 50, 0.5),
       0 0 100px rgba(255, 200, 50, 0.2),
       inset 0 0 30px rgba(255, 200, 50, 0.1);
@@ -284,10 +298,13 @@
 }
 
 @keyframes aurora {
-  0%, 100% {
+
+  0%,
+  100% {
     background-position: 0% 50%;
     filter: hue-rotate(0deg);
   }
+
   50% {
     background-position: 100% 50%;
     filter: hue-rotate(15deg);
@@ -295,18 +312,23 @@
 }
 
 @keyframes particle-float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0) translateX(0) scale(1);
     opacity: 0.6;
   }
+
   25% {
     transform: translateY(-30px) translateX(10px) scale(1.1);
     opacity: 1;
   }
+
   50% {
     transform: translateY(-50px) translateX(-5px) scale(0.9);
     opacity: 0.8;
   }
+
   75% {
     transform: translateY(-20px) translateX(-15px) scale(1.05);
     opacity: 0.9;
@@ -314,25 +336,31 @@
 }
 
 @keyframes wave-luxury {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: translateX(0) translateY(0) scaleY(1);
   }
-  25% { 
+
+  25% {
     transform: translateX(-2%) translateY(-5px) scaleY(1.02);
   }
-  50% { 
+
+  50% {
     transform: translateX(0) translateY(-10px) scaleY(1);
   }
-  75% { 
+
+  75% {
     transform: translateX(2%) translateY(-5px) scaleY(0.98);
   }
 }
 
 @keyframes shimmer-slide {
-  0% { 
+  0% {
     transform: translateX(-100%) skewX(-15deg);
   }
-  100% { 
+
+  100% {
     transform: translateX(200%) skewX(-15deg);
   }
 }
@@ -342,10 +370,12 @@
     transform: scale(1);
     opacity: 0.8;
   }
+
   50% {
     transform: scale(1.5);
     opacity: 0;
   }
+
   100% {
     transform: scale(1);
     opacity: 0;
@@ -353,8 +383,13 @@
 }
 
 @keyframes rotate-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes elegant-slide {
@@ -363,11 +398,13 @@
     transform: translateY(40px) scale(0.95);
     filter: blur(10px);
   }
+
   60% {
     opacity: 0.8;
     transform: translateY(-5px) scale(1.01);
     filter: blur(2px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -376,33 +413,46 @@
 }
 
 @keyframes garda-wave {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
     opacity: 0.8;
   }
-  50% { 
+
+  50% {
     transform: translateY(-8px) rotate(3deg);
     opacity: 1;
   }
 }
 
 @keyframes italian-bounce {
-  0%, 20%, 50%, 80%, 100% {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0) scale(1);
   }
+
   40% {
     transform: translateY(-12px) scale(1.05);
   }
+
   60% {
     transform: translateY(-5px) scale(1.02);
   }
 }
 
 @keyframes sparkle {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0;
     transform: scale(0) rotate(0deg);
   }
+
   50% {
     opacity: 1;
     transform: scale(1) rotate(180deg);
@@ -447,10 +497,10 @@
   left: 0;
   width: 50%;
   height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.15), 
-    transparent);
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.15),
+      transparent);
   animation: shimmer-slide 3s ease-in-out infinite;
 }
 
@@ -495,10 +545,10 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.1) 50%, 
-    transparent 100%);
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%);
   animation: shimmer-slide 2.5s ease-in-out infinite;
 }
 
@@ -512,7 +562,7 @@
 
 .italian-hover:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 
+  box-shadow:
     0 30px 60px rgba(0, 0, 0, 0.3),
     0 0 40px rgba(255, 200, 50, 0.15);
 }
@@ -527,10 +577,10 @@
   position: absolute;
   inset: -2px;
   border-radius: inherit;
-  background: linear-gradient(135deg, 
-    transparent 0%, 
-    rgba(255, 200, 50, 0.3) 50%, 
-    transparent 100%);
+  background: linear-gradient(135deg,
+      transparent 0%,
+      rgba(255, 200, 50, 0.3) 50%,
+      transparent 100%);
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
@@ -550,20 +600,20 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .text-glow-gold {
-  text-shadow: 
+  text-shadow:
     0 0 10px rgba(255, 200, 50, 0.5),
     0 0 20px rgba(255, 200, 50, 0.3),
     0 0 40px rgba(255, 200, 50, 0.2);
 }
 
 .text-glow-blue {
-  text-shadow: 
+  text-shadow:
     0 0 10px rgba(59, 180, 246, 0.5),
     0 0 20px rgba(59, 180, 246, 0.3);
 }
 
 .glow-border-gold {
-  box-shadow: 
+  box-shadow:
     0 0 0 1px rgba(255, 200, 50, 0.3),
     0 0 20px rgba(255, 200, 50, 0.2),
     inset 0 0 20px rgba(255, 200, 50, 0.05);
@@ -590,20 +640,71 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, 
-    hsl(var(--italian-gold)) 0%, 
-    hsl(var(--garda-blue)) 100%);
+  background: linear-gradient(180deg,
+      hsl(var(--italian-gold)) 0%,
+      hsl(var(--garda-blue)) 100%);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, 
-    hsl(var(--italian-gold-light)) 0%, 
-    hsl(var(--garda-light)) 100%);
+  background: linear-gradient(180deg,
+      hsl(var(--italian-gold-light)) 0%,
+      hsl(var(--garda-light)) 100%);
 }
 
 /* Selection */
 ::selection {
   background: hsl(var(--italian-gold) / 0.3);
   color: hsl(var(--foreground));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Maniacal Mobile Optimization (Max Performance)
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  .glass-ultra,
+  .glass-gold,
+  .italian-glass,
+  .garda-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .glass-ultra {
+    background: linear-gradient(135deg, rgba(20, 25, 40, 0.95) 0%, rgba(10, 12, 18, 0.95) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .glass-gold {
+    background: linear-gradient(135deg, rgba(40, 30, 10, 0.95) 0%, rgba(20, 15, 5, 0.95) 100%) !important;
+  }
+
+  .garda-card {
+    background: linear-gradient(135deg, rgba(20, 40, 60, 0.95) 0%, rgba(10, 20, 30, 0.95) 100%) !important;
+  }
+
+  /* Disable expensive shadow and filter animations */
+  .animate-gold-shimmer,
+  .animate-float-premium,
+  .animate-glow-breathe,
+  .luxury-title,
+  .garda-title {
+    animation: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Simplify shadows */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Retain strictly necessary UI shadows but simpler */
+  .card,
+  .button,
+  input {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+  }
 }

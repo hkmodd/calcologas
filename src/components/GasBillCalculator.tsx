@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import { PersonConsumption } from './PersonConsumption';
 import { ResultDisplay } from './ResultDisplay';
 import { ParticleField } from './ParticleField';
 import { LuxuryIcon } from './LuxuryIcon';
+import { FinancialPanicMode } from './FinancialPanicMode';
 
 interface Person {
   id: string;
@@ -17,46 +18,63 @@ interface Person {
   consumption: number;
 }
 
+
 const GasBillCalculator = () => {
-  const [totalBill, setTotalBill] = useState<number>(1000000000);
-  const [totalConsumption, setTotalConsumption] = useState<number>(353);
+  const [totalBill, setTotalBill] = useState<number | string>("");
+  const [totalConsumption, setTotalConsumption] = useState<number | string>(353);
   const [people, setPeople] = useState<Person[]>([
     { id: '1', name: 'Bruno', consumption: 190 },
     { id: '2', name: 'Daniele', consumption: 163 }
   ]);
 
-  const pricePerCubicMeter = totalConsumption > 0 ? totalBill / totalConsumption : 0;
+  const pricePerCubicMeter = useMemo(() => {
+    const bill = Number(totalBill) || 0;
+    const consumption = Number(totalConsumption) || 0;
+    return consumption > 0 ? bill / consumption : 0;
+  }, [totalBill, totalConsumption]);
 
-  const addPerson = () => {
-    const newPerson: Person = {
-      id: Date.now().toString(),
-      name: `Persona ${people.length + 1}`,
-      consumption: 0
-    };
-    setPeople([...people, newPerson]);
-  };
+  const addPerson = useCallback(() => {
+    setPeople(currentPeople => [
+      ...currentPeople,
+      {
+        id: Date.now().toString(),
+        name: `Persona ${currentPeople.length + 1}`,
+        consumption: 0
+      }
+    ]);
+  }, []);
 
-  const removePerson = (id: string) => {
-    if (people.length > 1) {
-      setPeople(people.filter(person => person.id !== id));
-    }
-  };
+  const removePerson = useCallback((id: string) => {
+    setPeople(currentPeople => {
+      if (currentPeople.length > 1) {
+        return currentPeople.filter(person => person.id !== id);
+      }
+      return currentPeople;
+    });
+  }, []);
 
-  const updatePerson = (id: string, field: 'name' | 'consumption', value: string | number) => {
-    setPeople(people.map(person => 
-      person.id === id 
+  const updatePerson = useCallback((id: string, field: 'name' | 'consumption', value: string | number) => {
+    setPeople(currentPeople => currentPeople.map(person =>
+      person.id === id
         ? { ...person, [field]: value }
         : person
     ));
-  };
+  }, []);
 
-  const results = people.map(person => ({
-    ...person,
-    amount: person.consumption * pricePerCubicMeter
-  }));
+  const results = useMemo(() => {
+    return people.map(person => ({
+      ...person,
+      amount: person.consumption * pricePerCubicMeter
+    }));
+  }, [people, pricePerCubicMeter]);
 
-  const totalCalculated = results.reduce((sum, result) => sum + result.amount, 0);
-  const actualTotalConsumption = people.reduce((sum, person) => sum + person.consumption, 0);
+  const totalCalculated = useMemo(() => {
+    return results.reduce((sum, result) => sum + result.amount, 0);
+  }, [results]);
+
+  const actualTotalConsumption = useMemo(() => {
+    return people.reduce((sum, person) => sum + person.consumption, 0);
+  }, [people]);
 
   useEffect(() => {
     console.log('Calcolo bolletta gas:', {
@@ -66,7 +84,9 @@ const GasBillCalculator = () => {
       persone: people,
       risultati: results
     });
-  }, [totalBill, totalConsumption, people]);
+  }, [totalBill, totalConsumption, people, pricePerCubicMeter, results]);
+
+  const isPanicMode = Number(totalBill) > 2000;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -97,7 +117,7 @@ const GasBillCalculator = () => {
     <div className="min-h-screen relative overflow-hidden bg-background">
       {/* Sfondo premium con particelle */}
       <ParticleField />
-      
+
       {/* Effetti di luce ambientali */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-garda-blue/10 rounded-full blur-3xl animate-pulse" />
@@ -106,9 +126,9 @@ const GasBillCalculator = () => {
       </div>
 
       {/* Decorazioni animate premium */}
-      <motion.div 
+      <motion.div
         className="absolute top-20 left-10 z-10"
-        animate={{ 
+        animate={{
           y: [0, -20, 0],
           rotate: [0, 10, 0],
           opacity: [0.2, 0.4, 0.2]
@@ -117,10 +137,10 @@ const GasBillCalculator = () => {
       >
         <Mountain className="w-20 h-20 text-garda-light/30" />
       </motion.div>
-      
-      <motion.div 
+
+      <motion.div
         className="absolute top-40 right-16 z-10"
-        animate={{ 
+        animate={{
           y: [0, -15, 0],
           x: [0, 10, 0],
           opacity: [0.2, 0.5, 0.2]
@@ -130,9 +150,9 @@ const GasBillCalculator = () => {
         <Waves className="w-16 h-16 text-garda-blue/40" />
       </motion.div>
 
-      <motion.div 
+      <motion.div
         className="absolute bottom-32 left-20 z-10"
-        animate={{ 
+        animate={{
           y: [0, -10, 0],
           rotate: [0, -15, 0],
           opacity: [0.15, 0.35, 0.15]
@@ -141,18 +161,18 @@ const GasBillCalculator = () => {
       >
         <Crown className="w-14 h-14 text-italian-gold/40" />
       </motion.div>
-      
+
       {/* Contenuto principale */}
-      <motion.div 
+      <motion.div
         className="relative z-10 p-4 md:p-8"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         <div className="max-w-5xl mx-auto space-y-10">
-          
+
           {/* Header Ultra Premium */}
-          <motion.div 
+          <motion.div
             className="text-center py-16 relative"
             variants={itemVariants}
           >
@@ -171,7 +191,7 @@ const GasBillCalculator = () => {
             </motion.div>
 
             {/* Icona principale */}
-            <motion.div 
+            <motion.div
               className="flex items-center justify-center mb-8"
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
@@ -181,7 +201,7 @@ const GasBillCalculator = () => {
             </motion.div>
 
             {/* Titolo principale */}
-            <motion.h1 
+            <motion.h1
               className="text-5xl md:text-8xl font-display font-bold luxury-title mb-6"
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -189,8 +209,8 @@ const GasBillCalculator = () => {
             >
               Calcolatore Gas
             </motion.h1>
-            
-            <motion.h2 
+
+            <motion.h2
               className="text-2xl md:text-4xl font-display font-medium text-garda-light mb-4"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -198,8 +218,8 @@ const GasBillCalculator = () => {
             >
               Lago di Garda Luxury Edition
             </motion.h2>
-            
-            <motion.p 
+
+            <motion.p
               className="text-lg md:text-xl text-muted-foreground italic max-w-2xl mx-auto"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -220,11 +240,12 @@ const GasBillCalculator = () => {
               </CardHeader>
               <CardContent className="p-8 space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <motion.div 
+                  <motion.div
                     className="space-y-4"
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
+
                     <Label htmlFor="totalBill" className="text-lg font-semibold text-garda-light flex items-center gap-2">
                       <Euro className="w-5 h-5 text-italian-gold" />
                       Totale Bolletta
@@ -235,15 +256,19 @@ const GasBillCalculator = () => {
                         id="totalBill"
                         type="number"
                         value={totalBill}
-                        onChange={(e) => setTotalBill(Number(e.target.value))}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setTotalBill(val === '' ? '' : Number(val));
+                        }}
                         className="relative text-xl h-16 number-input bg-white/5 border-white/10 focus:border-italian-gold/50 focus:ring-italian-gold/20 transition-all duration-300 text-foreground placeholder:text-muted-foreground"
                         step="0.01"
                         min="0"
+                        placeholder="0.00"
                       />
                     </div>
                   </motion.div>
-                  
-                  <motion.div 
+
+                  <motion.div
                     className="space-y-4"
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -258,10 +283,14 @@ const GasBillCalculator = () => {
                         id="totalConsumption"
                         type="number"
                         value={totalConsumption}
-                        onChange={(e) => setTotalConsumption(Number(e.target.value))}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setTotalConsumption(val === '' ? '' : Number(val));
+                        }}
                         className="relative text-xl h-16 number-input bg-white/5 border-white/10 focus:border-garda-blue/50 focus:ring-garda-blue/20 transition-all duration-300 text-foreground"
                         step="0.1"
                         min="0"
+                        placeholder="0.0"
                       />
                     </div>
                   </motion.div>
@@ -269,8 +298,8 @@ const GasBillCalculator = () => {
 
                 {/* Prezzo al metro cubo */}
                 <AnimatePresence>
-                  {pricePerCubicMeter > 0 && (
-                    <motion.div 
+                  {!isPanicMode && pricePerCubicMeter > 0 && (
+                    <motion.div
                       className="relative overflow-hidden rounded-2xl"
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
@@ -279,14 +308,14 @@ const GasBillCalculator = () => {
                       <div className="absolute inset-0 garda-sunset opacity-90" />
                       <div className="absolute inset-0 animate-shimmer-slide" />
                       <div className="relative p-8 text-center">
-                        <motion.p 
+                        <motion.p
                           className="text-xl font-medium text-white/90 mb-2"
                           initial={{ y: 20, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
                         >
                           Prezzo per metro cubo
                         </motion.p>
-                        <motion.p 
+                        <motion.p
                           className="text-4xl md:text-5xl font-display font-bold text-white text-glow-gold"
                           initial={{ scale: 0.5, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
@@ -294,13 +323,14 @@ const GasBillCalculator = () => {
                         >
                           {pricePerCubicMeter.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€
                         </motion.p>
-                        <motion.p 
+
+                        <motion.p
                           className="mt-3 text-white/80 text-lg"
                           initial={{ y: 10, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
                           transition={{ delay: 0.2 }}
                         >
-                          {totalBill.toLocaleString('it-IT')}€ ÷ {totalConsumption}m³
+                          {Number(totalBill).toLocaleString('it-IT')}€ ÷ {totalConsumption}m³
                         </motion.p>
                       </div>
                     </motion.div>
@@ -310,74 +340,95 @@ const GasBillCalculator = () => {
             </Card>
           </motion.div>
 
-          {/* Card Persone */}
-          <motion.div variants={itemVariants}>
-            <Card className="glass-ultra luxury-border overflow-hidden">
-              <CardHeader className="border-b border-white/5 pb-6">
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <CardTitle className="flex items-center gap-4 text-2xl">
-                    <LuxuryIcon icon={Users} size="md" variant="garda" />
-                    <span className="garda-title font-display">Consumi Individuali</span>
-                  </CardTitle>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button 
-                      onClick={addPerson}
-                      className="garda-sunset border-0 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:shadow-italian-gold/20 transition-all duration-300"
-                      size="lg"
-                    >
-                      <Plus className="w-5 h-5 mr-2" />
-                      Aggiungi Persona
-                    </Button>
-                  </motion.div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-8 space-y-6">
-                <AnimatePresence mode="popLayout">
-                  {people.map((person, index) => (
-                    <motion.div
-                      key={person.id}
-                      layout
-                      initial={{ opacity: 0, x: -50, scale: 0.9 }}
-                      animate={{ opacity: 1, x: 0, scale: 1 }}
-                      exit={{ opacity: 0, x: 50, scale: 0.9 }}
-                      transition={{ 
-                        type: "spring", 
-                        stiffness: 200, 
-                        damping: 20,
-                        delay: index * 0.05 
-                      }}
-                    >
-                      <PersonConsumption
-                        person={person}
-                        index={index}
-                        pricePerCubicMeter={pricePerCubicMeter}
-                        onUpdate={updatePerson}
-                        onRemove={removePerson}
-                        canRemove={people.length > 1}
-                      />
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <AnimatePresence mode="wait">
+            {isPanicMode ? (
+              <motion.div
+                key="panic"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                variants={itemVariants}
+                className="my-10"
+              >
+                <FinancialPanicMode
+                  amount={Number(totalBill)}
+                  onReset={() => setTotalBill(0)}
+                />
+              </motion.div>
+            ) : (
+              <>
+                {/* Card Persone */}
+                <motion.div variants={itemVariants} key="people">
+                  <Card className="glass-ultra luxury-border overflow-hidden">
+                    <CardHeader className="border-b border-white/5 pb-6">
+                      <div className="flex items-center justify-between flex-wrap gap-4">
+                        <CardTitle className="flex items-center gap-4 text-2xl">
+                          <LuxuryIcon icon={Users} size="md" variant="garda" />
+                          <span className="garda-title font-display">Consumi Individuali</span>
+                        </CardTitle>
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Button
+                            onClick={addPerson}
+                            className="garda-sunset border-0 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:shadow-italian-gold/20 transition-all duration-300"
+                            size="lg"
+                          >
+                            <Plus className="w-5 h-5 mr-2" />
+                            Aggiungi Persona
+                          </Button>
+                        </motion.div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-8 space-y-6">
+                      <AnimatePresence mode="popLayout">
+                        {people.map((person, index) => (
+                          <motion.div
+                            key={person.id}
+                            layout
+                            initial={{ opacity: 0, x: -50, scale: 0.9 }}
+                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: 50, scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 200,
+                              damping: 20,
+                              delay: index * 0.05
+                            }}
+                          >
+                            <PersonConsumption
+                              person={person}
+                              index={index}
+                              pricePerCubicMeter={pricePerCubicMeter}
+                              onUpdate={updatePerson}
+                              onRemove={removePerson}
+                              canRemove={people.length > 1}
+                            />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </CardContent>
+                  </Card>
+                </motion.div>
 
-          {/* Risultati */}
-          <motion.div variants={itemVariants}>
-            <ResultDisplay
-              results={results}
-              totalCalculated={totalCalculated}
-              totalBill={totalBill}
-              actualTotalConsumption={actualTotalConsumption}
-              totalConsumption={totalConsumption}
-            />
-          </motion.div>
+
+                {/* Risultati */}
+                <motion.div variants={itemVariants} key="results">
+                  <ResultDisplay
+                    results={results}
+                    totalCalculated={totalCalculated}
+                    totalBill={Number(totalBill) || 0}
+                    actualTotalConsumption={actualTotalConsumption}
+                    totalConsumption={Number(totalConsumption) || 0}
+                  />
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
 
           {/* Footer Premium */}
-          <motion.footer 
+          <motion.footer
             className="text-center py-12 space-y-4"
             variants={itemVariants}
           >
@@ -407,5 +458,4 @@ const GasBillCalculator = () => {
     </div>
   );
 };
-
 export default GasBillCalculator;
