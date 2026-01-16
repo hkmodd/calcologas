@@ -1,0 +1,149 @@
+/* FinancialPanicMode.css - GPU-accelerated CSS animations */
+
+/* Container with will-change for GPU promotion */
+.panic-container {
+    will-change: transform, opacity;
+}
+
+/* CRT Scanlines - Static, no animation needed */
+.panic-scanlines {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 3px 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* Pulsing glow - GPU accelerated with opacity only */
+.panic-glow {
+    position: absolute;
+    inset: 0;
+    background: rgba(245, 158, 11, 0.05);
+    pointer-events: none;
+    z-index: 4;
+    animation: panic-pulse 2s ease-in-out infinite;
+}
+
+@keyframes panic-pulse {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Slow spin for radiation icon - GPU accelerated with transform */
+.panic-spin {
+    animation: panic-spin-anim 10s linear infinite;
+    will-change: transform;
+}
+
+@keyframes panic-spin-anim {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Wobble effect for icon container - GPU accelerated */
+.panic-icon-wobble {
+    animation: panic-wobble 4s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes panic-wobble {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(10deg);
+    }
+
+    75% {
+        transform: rotate(-10deg);
+    }
+}
+
+/* Flicker effect for CRITICAL ERROR text - GPU accelerated with opacity */
+.panic-flicker {
+    animation: panic-flicker-anim 0.15s ease-in-out infinite alternate;
+    will-change: opacity;
+}
+
+@keyframes panic-flicker-anim {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.85;
+    }
+}
+
+/* Glitch overlay - Minimal, GPU accelerated */
+.panic-glitch-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(245, 158, 11, 0.05);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 60;
+    animation: panic-glitch 4s ease-in-out infinite;
+    will-change: opacity;
+}
+
+@keyframes panic-glitch {
+
+    0%,
+    90%,
+    100% {
+        opacity: 0;
+    }
+
+    92% {
+        opacity: 0.1;
+    }
+
+    94% {
+        opacity: 0;
+    }
+
+    96% {
+        opacity: 0.15;
+    }
+
+    98% {
+        opacity: 0;
+    }
+}
+
+/* Mobile optimization - Reduce animation complexity */
+@media (max-width: 768px) {
+    .panic-spin {
+        animation-duration: 20s;
+        /* Slower on mobile */
+    }
+
+    .panic-flicker {
+        animation: none;
+        /* Disable flicker on mobile for performance */
+        opacity: 1;
+    }
+
+    .panic-glitch-overlay {
+        animation: none;
+        opacity: 0;
+    }
+}

@@ -231,6 +231,66 @@ class SoundEngine {
         osc.start(this.context.currentTime);
         osc.stop(this.context.currentTime + 0.03);
     }
+
+    // Remove person sound - descending "woosh"
+    public playRemove() {
+        this.init();
+        if (!this.context || !this.masterGain) return;
+
+        const osc = this.context.createOscillator();
+        const gain = this.context.createGain();
+
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+
+        // Descending pitch (opposite of add)
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, this.context.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(200, this.context.currentTime + 0.15);
+
+        gain.gain.setValueAtTime(0, this.context.currentTime);
+        gain.gain.linearRampToValueAtTime(0.3, this.context.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.context.currentTime + 0.15);
+
+        osc.start(this.context.currentTime);
+        osc.stop(this.context.currentTime + 0.15);
+
+        this.vibrate(30);
+    }
+
+    // Pop sound for main icon tap - bubbly and satisfying
+    public playPop() {
+        this.init();
+        if (!this.context || !this.masterGain) return;
+
+        const osc = this.context.createOscillator();
+        const gain = this.context.createGain();
+
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+
+        // Quick pitch sweep up then down (pop effect)
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, this.context.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, this.context.currentTime + 0.03);
+        osc.frequency.exponentialRampToValueAtTime(200, this.context.currentTime + 0.08);
+
+        gain.gain.setValueAtTime(0, this.context.currentTime);
+        gain.gain.linearRampToValueAtTime(0.4, this.context.currentTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.context.currentTime + 0.1);
+
+        osc.start(this.context.currentTime);
+        osc.stop(this.context.currentTime + 0.1);
+
+        this.vibrate(20);
+    }
+
+    // Haptic vibration (if supported)
+    public vibrate(duration: number = 50) {
+        if ('vibrate' in navigator) {
+            navigator.vibrate(duration);
+        }
+    }
 }
 
 export const soundEngine = new SoundEngine();

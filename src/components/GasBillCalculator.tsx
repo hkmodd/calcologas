@@ -52,6 +52,7 @@ const GasBillCalculator = () => {
   const removePerson = useCallback((id: string) => {
     setPeople(currentPeople => {
       if (currentPeople.length > 1) {
+        soundEngine.playRemove();
         return currentPeople.filter(person => person.id !== id);
       }
       return currentPeople;
@@ -251,12 +252,14 @@ const GasBillCalculator = () => {
               <Sparkles className="w-4 h-4 text-italian-gold animate-pulse" />
             </motion.div>
 
-            {/* Icona principale */}
+            {/* Icona principale - tappabile */}
             <motion.div
-              className="flex items-center justify-center mb-8"
+              className="flex items-center justify-center mb-8 cursor-pointer"
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ delay: 0.3, type: "spring", stiffness: 150, damping: 12 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => soundEngine.playPop()}
             >
               <LuxuryIcon icon={Flame} size="xl" variant="sunset" />
             </motion.div>
@@ -401,15 +404,16 @@ const GasBillCalculator = () => {
             </Card>
           </motion.div>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             {isPanicMode ? (
               <motion.div
                 key="panic"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                variants={itemVariants}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
                 className="my-10"
+                style={{ willChange: 'opacity' }}
               >
                 <FinancialPanicMode
                   amount={Number(totalBill)}
