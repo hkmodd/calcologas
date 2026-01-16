@@ -286,10 +286,63 @@ class SoundEngine {
     }
 
     // Haptic vibration (if supported)
-    public vibrate(duration: number = 50) {
+    public vibrate(duration: number | number[] = 50) {
         if ('vibrate' in navigator) {
             navigator.vibrate(duration);
         }
+    }
+
+    // Celebration fanfare - confetti moment!
+    public playCelebration() {
+        this.init();
+        if (!this.context || !this.masterGain) return;
+
+        const currentTime = this.context.currentTime;
+
+        // Triumphant ascending arpeggio (C major → G major → high C)
+        const celebrationNotes = [
+            { freq: 523.25, time: 0 },       // C5
+            { freq: 659.25, time: 0.08 },    // E5
+            { freq: 783.99, time: 0.16 },    // G5
+            { freq: 1046.5, time: 0.24 },    // C6
+            { freq: 1318.5, time: 0.35 },    // E6 (peak)
+        ];
+
+        celebrationNotes.forEach(({ freq, time }) => {
+            const osc = this.context!.createOscillator();
+            const gain = this.context!.createGain();
+            osc.connect(gain);
+            gain.connect(this.masterGain!);
+
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+
+            const startTime = currentTime + time;
+            gain.gain.setValueAtTime(0, startTime);
+            gain.gain.linearRampToValueAtTime(0.3, startTime + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.4);
+
+            osc.start(startTime);
+            osc.stop(startTime + 0.4);
+        });
+
+        // Festive haptic pattern: quick bursts
+        this.vibrate([30, 50, 30, 50, 60]);
+    }
+
+    // Success haptic - two quick taps
+    public vibrateSuccess() {
+        this.vibrate([20, 40, 20]);
+    }
+
+    // Mode change haptic - single medium tap
+    public vibrateModeChange() {
+        this.vibrate(40);
+    }
+
+    // Error/warning haptic - longer vibration
+    public vibrateError() {
+        this.vibrate(100);
     }
 }
 

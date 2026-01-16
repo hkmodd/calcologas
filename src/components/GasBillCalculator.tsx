@@ -13,6 +13,7 @@ import { LuxuryIcon } from './LuxuryIcon';
 
 import { FinancialPanicMode } from './FinancialPanicMode';
 import { GardesanoQuote } from './GardesanoQuote';
+import { Confetti } from './Confetti';
 import { soundEngine } from '@/utils/SoundEngine';
 
 interface Person {
@@ -35,9 +36,12 @@ const GasBillCalculator = () => {
   // Smart distribution state
   const [distributionMode, setDistributionMode] = useState<'smart' | 'equal' | 'manual'>('smart');
   const [lastEditedId, setLastEditedId] = useState<string | null>('1'); // Bruno starts as fixed
+  const [showConfetti, setShowConfetti] = useState(false);
+  const hasCelebrated = useRef(false);
 
   const calculationTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastPriceRef = useRef<number>(0);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const pricePerCubicMeter = useMemo(() => {
     const bill = Number(totalBill) || 0;
@@ -105,7 +109,8 @@ const GasBillCalculator = () => {
 
     // Calculate remaining to distribute among others
     const remaining = Math.max(0, total - fixedConsumption);
-    const autoShare = othersCount > 0 ? remaining / othersCount : 0;
+    // Use toFixed to avoid floating-point precision issues (e.g., 2999.9999999)
+    const autoShare = othersCount > 0 ? Number((remaining / othersCount).toFixed(2)) : 0;
 
     return people.map(p => {
       if (p.id === lastEditedId) {
@@ -204,6 +209,18 @@ const GasBillCalculator = () => {
         setShowResults(true);
         soundEngine.playCalculationComplete();
         lastPriceRef.current = pricePerCubicMeter;
+
+        // Auto-scroll to results
+        setTimeout(() => {
+          resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+
+        // Trigger celebration on first calculation (but NOT in panic mode!)
+        if (!hasCelebrated.current && Number(totalBill) <= 2000) {
+          hasCelebrated.current = true;
+          setShowConfetti(true);
+          soundEngine.playCelebration();
+        }
       }, 800);
     }
 
@@ -402,6 +419,12 @@ const GasBillCalculator = () => {
                         type="number"
                         value={totalBill}
                         onChange={(e) => setTotalBill(e.target.value)}
+                        onBlur={(e) => {
+                          const val = Number(e.target.value);
+                          if (!isNaN(val) && val > 0) {
+                            setTotalBill(val.toFixed(2));
+                          }
+                        }}
                         className="relative text-xl h-16 number-input bg-white/5 border-white/10 focus:border-italian-gold/50 focus:ring-italian-gold/20 transition-all duration-300 text-foreground placeholder:text-muted-foreground"
                         step="0.01"
                         min="0"
@@ -435,46 +458,6 @@ const GasBillCalculator = () => {
                   </motion.div>
                 </div>
 
-                {/* Prezzo al metro cubo */}
-                <AnimatePresence>
-                  {!isPanicMode && showResults && pricePerCubicMeter > 0 && (
-                    <motion.div
-                      className="relative overflow-hidden rounded-2xl"
-                      initial={{ opacity: 0, height: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, height: 'auto', scale: 1 }}
-                      exit={{ opacity: 0, height: 0, scale: 0.95 }}
-                    >
-                      <div className="absolute inset-0 garda-sunset opacity-90" />
-                      <div className="absolute inset-0 animate-shimmer-slide" />
-                      <div className="relative p-8 text-center">
-                        <motion.p
-                          className="text-xl font-medium text-white/90 mb-2"
-                          initial={{ y: 20, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                        >
-                          Prezzo per metro cubo
-                        </motion.p>
-                        <motion.p
-                          className="text-4xl md:text-5xl font-display font-bold text-white text-glow-gold"
-                          initial={{ scale: 0.5, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
-                        >
-                          {pricePerCubicMeter.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€
-                        </motion.p>
-
-                        <motion.p
-                          className="mt-3 text-white/80 text-lg"
-                          initial={{ y: 10, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          transition={{ delay: 0.2 }}
-                        >
-                          {Number(totalBill).toLocaleString('it-IT')}€ ÷ {totalConsumption}m³
-                        </motion.p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </CardContent>
             </Card>
           </motion.div>
@@ -542,35 +525,44 @@ const GasBillCalculator = () => {
                         <Button
                           variant={distributionMode === 'smart' ? 'default' : 'outline'}
                           size="sm"
-                          onClick={() => setDistributionMode('smart')}
+                          onClick={() => {
+                            setDistributionMode('smart');
+                            soundEngine.vibrateModeChange();
+                          }}
                           className={distributionMode === 'smart'
                             ? 'bg-italian-gold hover:bg-italian-gold/90 text-black'
                             : 'border-white/20 hover:bg-white/10'}
                         >
-                          <Zap className="w-4 h-4 mr-1" />
-                          Auto-Bilancia
+                          <Zap className="w-4 h-4 md:mr-1" />
+                          <span className="hidden md:inline">Auto-Bilancia</span>
                         </Button>
                         <Button
                           variant={distributionMode === 'equal' ? 'default' : 'outline'}
                           size="sm"
-                          onClick={() => setDistributionMode('equal')}
+                          onClick={() => {
+                            setDistributionMode('equal');
+                            soundEngine.vibrateModeChange();
+                          }}
                           className={distributionMode === 'equal'
                             ? 'bg-garda-blue hover:bg-garda-blue/90 text-white'
                             : 'border-white/20 hover:bg-white/10'}
                         >
-                          <Split className="w-4 h-4 mr-1" />
-                          Dividi Equo
+                          <Split className="w-4 h-4 md:mr-1" />
+                          <span className="hidden md:inline">Dividi Equo</span>
                         </Button>
                         <Button
                           variant={distributionMode === 'manual' ? 'default' : 'outline'}
                           size="sm"
-                          onClick={() => setDistributionMode('manual')}
+                          onClick={() => {
+                            setDistributionMode('manual');
+                            soundEngine.vibrateModeChange();
+                          }}
                           className={distributionMode === 'manual'
                             ? 'bg-muted hover:bg-muted/90'
                             : 'border-white/20 hover:bg-white/10'}
                         >
-                          <Edit3 className="w-4 h-4 mr-1" />
-                          Manuale
+                          <Edit3 className="w-4 h-4 md:mr-1" />
+                          <span className="hidden md:inline">Manuale</span>
                         </Button>
                       </div>
                     </CardHeader>
@@ -630,16 +622,60 @@ const GasBillCalculator = () => {
                 </motion.div>
 
 
-                {/* Risultati */}
-                <motion.div variants={itemVariants} key="results">
-                  <ResultDisplay
-                    results={results}
-                    totalCalculated={totalCalculated}
-                    totalBill={Number(totalBill) || 0}
-                    actualTotalConsumption={actualTotalConsumption}
-                    totalConsumption={Number(totalConsumption) || 0}
-                  />
-                </motion.div>
+                {/* Risultati con ref per scroll */}
+                <div ref={resultsRef}>
+                  {/* Prezzo al metro cubo - spostato qui */}
+                  <AnimatePresence>
+                    {!isPanicMode && showResults && pricePerCubicMeter > 0 && (
+                      <motion.div
+                        variants={itemVariants}
+                        className="relative overflow-hidden rounded-2xl mb-8"
+                        initial={{ opacity: 0, height: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                        exit={{ opacity: 0, height: 0, scale: 0.95 }}
+                      >
+                        <div className="absolute inset-0 garda-sunset opacity-90" />
+                        <div className="absolute inset-0 animate-shimmer-slide" />
+                        <div className="relative p-8 text-center">
+                          <motion.p
+                            className="text-xl font-medium text-white/90 mb-2"
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                          >
+                            Prezzo per metro cubo
+                          </motion.p>
+                          <motion.p
+                            className="text-4xl md:text-5xl font-display font-bold text-white text-glow-gold"
+                            initial={{ scale: 0.5, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+                          >
+                            {pricePerCubicMeter.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€
+                          </motion.p>
+                          <motion.p
+                            className="mt-3 text-white/80 text-lg"
+                            initial={{ y: 10, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                          >
+                            {Number(totalBill).toLocaleString('it-IT')}€ ÷ {totalConsumption}m³
+                          </motion.p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Risultati per persona */}
+                  <motion.div variants={itemVariants} key="results">
+                    <ResultDisplay
+                      results={results}
+                      totalCalculated={totalCalculated}
+                      totalBill={Number(totalBill) || 0}
+                      actualTotalConsumption={actualTotalConsumption}
+                      totalConsumption={Number(totalConsumption) || 0}
+                    />
+                  </motion.div>
+                </div>
               </>
             )}
           </AnimatePresence>
@@ -680,6 +716,12 @@ const GasBillCalculator = () => {
           </motion.footer>
         </div>
       </motion.div>
+
+      {/* Celebration Confetti */}
+      <Confetti
+        active={showConfetti}
+        onComplete={() => setShowConfetti(false)}
+      />
     </div>
   );
 };

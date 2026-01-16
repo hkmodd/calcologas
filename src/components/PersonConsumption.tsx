@@ -165,42 +165,6 @@ export const PersonConsumption: React.FC<PersonConsumptionProps> = React.memo(({
               </div>
             </motion.div>
           </div>
-
-          {/* Risultato importo */}
-          <AnimatePresence>
-            {pricePerCubicMeter > 0 && Number(person.consumption) > 0 && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="relative overflow-hidden rounded-xl"
-              >
-                <div className="absolute inset-0 garda-sunset opacity-90" />
-                <div className="absolute inset-0 animate-shimmer-slide" />
-
-                <div className="relative p-4 md:p-5 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-right">
-                  <div className="text-white/90 font-medium text-xs md:text-sm order-2 md:order-1">
-                    <span className="opacity-80">Formula: </span>
-                    <span className="font-mono">
-                      {pricePerCubicMeter.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€ × {person.consumption}m³
-                    </span>
-                  </div>
-
-                  <motion.div
-                    className="flex items-center gap-2 md:gap-3 order-1 md:order-2"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <Euro className="w-6 h-6 md:w-7 md:h-7 text-white drop-shadow-lg" />
-                    <span className="text-2xl md:text-3xl font-bold text-white font-display text-glow-gold">
-                      {amount.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </span>
-                  </motion.div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </Card>
     </motion.div>
