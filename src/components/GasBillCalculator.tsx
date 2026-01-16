@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef, startTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -163,15 +163,13 @@ const GasBillCalculator = () => {
   };
 
   const itemVariants = {
-    hidden: { y: 60, opacity: 0, filter: 'blur(10px)' },
+    hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      filter: 'blur(0px)',
       transition: {
-        type: "spring" as const,
-        stiffness: 100,
-        damping: 15
+        duration: 0.3,
+        ease: "easeOut" as const
       }
     }
   };
@@ -419,7 +417,9 @@ const GasBillCalculator = () => {
                 <FinancialPanicMode
                   amount={Number(totalBill)}
                   onReset={() => {
-                    setTotalBill("");
+                    startTransition(() => {
+                      setTotalBill("");
+                    });
                     soundEngine.playPowerUp();
                   }}
                 />
@@ -458,15 +458,13 @@ const GasBillCalculator = () => {
                         {people.map((person, index) => (
                           <motion.div
                             key={person.id}
-                            layout
-                            initial={{ opacity: 0, x: -50, scale: 0.9 }}
-                            animate={{ opacity: 1, x: 0, scale: 1 }}
-                            exit={{ opacity: 0, x: 50, scale: 0.9 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
                             transition={{
-                              type: "spring",
-                              stiffness: 200,
-                              damping: 20,
-                              delay: index * 0.05
+                              duration: 0.2,
+                              ease: "easeOut",
+                              delay: index * 0.03
                             }}
                           >
                             <PersonConsumption
