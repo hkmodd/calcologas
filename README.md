@@ -1,63 +1,63 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Made%20With-Noia%20Creativa-gold?style=for-the-badge" alt="Made with Noia Creativa"/>
-  <img src="https://img.shields.io/badge/For-Nonno%20Bruno-blue?style=for-the-badge" alt="For Nonno Bruno"/>
+  <img src="https://img.shields.io/badge/Made%20With-Creative%20Boredom-gold?style=for-the-badge" alt="Made with Creative Boredom"/>
+  <img src="https://img.shields.io/badge/For-Grandpa%20Bruno-blue?style=for-the-badge" alt="For Grandpa Bruno"/>
   <img src="https://img.shields.io/badge/Premium-Edition%202025-ff6b6b?style=for-the-badge" alt="Premium Edition"/>
 </p>
 
-<h1 align="center">🔥 Calcolatore Gas</h1>
+<h1 align="center">🔥 Gas Bill Calculator</h1>
 <h3 align="center">Lago di Garda Luxury Edition</h3>
 
 <p align="center">
-  <em>L'eccellenza italiana incontra la tecnologia più raffinata</em>
+  <em>Italian excellence meets cutting-edge technology</em>
 </p>
 
 ---
 
-## 🎭 La Storia
+## 🎭 The Story
 
-Un giorno mi annoiavo. Mio nonno aveva bisogno di dividere le bollette del gas tra i coinquilini.
+One day I was bored. My grandpa needed to split gas bills between housemates.
 
-**Risultato?** Un'applicazione web con più effetti cinematografici di un film Marvel.
+**Result?** A web application with more cinematic effects than a Marvel movie.
 
-> *"Non avevo bisogno di una sirena d'allarme nucleare quando la bolletta supera i 2000€, ma eccola qui."*
+> *"I didn't need a nuclear alarm siren when the bill exceeds €2000, but here it is."*
 
 ---
 
 ## ✨ Features
 
-| Feature                          | Descrizione                                   |
-| -------------------------------- | --------------------------------------------- |
-| 🎨 **Particelle Canvas**          | Engine di particelle hardware-accelerato      |
-| 🔊 **Sound Design**               | Audio sintetizzato real-time (Web Audio API)  |
-| 🎬 **Esperienza Cinematografica** | Risultati che appaiono dopo 800ms con chime   |
-| ☢️ **Panic Mode**                 | Easter egg Fallout quando la bolletta > 2000€ |
-| 📱 **Mobile-First**               | 60fps garantiti su qualsiasi dispositivo      |
-| 📦 **Single-File**                | ~550KB, funziona offline via `file://`        |
+| Feature                    | Description                                 |
+| -------------------------- | ------------------------------------------- |
+| 🎨 **Canvas Particles**     | Hardware-accelerated particle engine        |
+| 🔊 **Sound Design**         | Real-time synthesized audio (Web Audio API) |
+| 🎬 **Cinematic Experience** | Results appear after 800ms delay with chime |
+| ☢️ **Panic Mode**           | Fallout-style easter egg when bill > €2000  |
+| 📱 **Mobile-First**         | Guaranteed 60fps on any device              |
+| 📦 **Single-File**          | ~550KB, works offline via `file://`         |
 
 ---
 
-## 🎵 Colonna Sonora (Sì, ha i suoni)
+## 🎵 Soundtrack (Yes, it has sounds)
 
-- **🌅 Startup**: Basso caldo + shimmer al primo click
-- **🔔 Calcolo Completo**: "Ding-dong" soddisfacente
-- **✨ Click**: Feedback cristallino
-- **🚨 Sirena**: Allarme Fallout quando esageri
-- **🎵 PowerUp**: Arpeggio per tornare alla realtà
+- **🌅 Startup**: Warm bass + shimmer on first click
+- **🔔 Calculation Complete**: Satisfying "ding-dong"
+- **✨ Click**: Crystal feedback
+- **🚨 Siren**: Fallout alarm when you go overboard
+- **🎵 PowerUp**: Arpeggio to return to reality
 
 ---
 
 ## 🚀 Quick Start
 
-### Opzione 1: Magic Link (GitHub Pages)
-👉 **[Apri l'App](https://<username>.github.io/calcologas/)**
+### Option 1: GitHub Pages
+👉 **[Open the App](https://sebascode.github.io/calcologas/)**
 
-### Opzione 2: Download Diretto
-1. Scarica `dist/index.html`
-2. Apri il file (funziona offline!)
+### Option 2: Direct Download
+1. Download `dist/index.html`
+2. Open the file (works offline!)
 
-### Opzione 3: Development
+### Option 3: Development
 ```bash
-git clone https://github.com/<username>/calcologas.git
+git clone https://github.com/sebascode/calcologas.git
 cd calcologas
 npm install
 npm run dev
@@ -70,39 +70,33 @@ npm run dev
 ```
 React 18 + TypeScript + Vite
 ├── Tailwind CSS (styling)
-├── Framer Motion (animazioni)
-├── shadcn/ui (componenti)
-├── Web Audio API (suoni sintetizzati)
-├── HTML5 Canvas (particelle)
-└── vite-plugin-singlefile (build unico file)
+├── Framer Motion (animations)
+├── shadcn/ui (components)
+├── Web Audio API (synthesized sounds)
+├── HTML5 Canvas (particles)
+└── vite-plugin-singlefile (single file build)
 ```
-
----
-
-## 📸 Screenshots
-
-*L'app è troppo premium per gli screenshot. Devi provarla.*
 
 ---
 
 ## 🎯 Easter Eggs
 
-1. **Inserisci >2000€** nella bolletta
-2. **Guarda cosa succede** ☢️
+1. **Enter >€2000** in the bill field
+2. **Watch what happens** ☢️
 
 ---
 
-## ❤️ Crediti
+## ❤️ Credits
 
-- **Progetto originale**: [Lovable.dev](https://lovable.dev)
-- **Ottimizzazioni folli**: Antigravity AI
-- **Motivazione**: La noia di un sabato pomeriggio
-- **Utente finale**: Nonno Bruno (che probabilmente userà solo la versione base)
+- **Original Design**: [Lovable.dev](https://lovable.dev)
+- **Crazy Optimizations**: Antigravity AI
+- **Motivation**: Saturday afternoon boredom
+- **End User**: Grandpa Bruno (who will probably just use the basic version)
 
 ---
 
 <p align="center">
-  <strong>Lago di Garda • Italia • 2025</strong>
+  <strong>Lago di Garda • Italy • 2025</strong>
   <br/>
   <em>Crafted with Italian Excellence™</em>
 </p>
