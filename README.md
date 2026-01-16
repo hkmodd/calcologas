@@ -1,73 +1,108 @@
-# Welcome to your Lovable project
+<p align="center">
+  <img src="https://img.shields.io/badge/Made%20With-Noia%20Creativa-gold?style=for-the-badge" alt="Made with Noia Creativa"/>
+  <img src="https://img.shields.io/badge/For-Nonno%20Bruno-blue?style=for-the-badge" alt="For Nonno Bruno"/>
+  <img src="https://img.shields.io/badge/Premium-Edition%202025-ff6b6b?style=for-the-badge" alt="Premium Edition"/>
+</p>
 
-## Project info
+<h1 align="center">🔥 Calcolatore Gas</h1>
+<h3 align="center">Lago di Garda Luxury Edition</h3>
 
-**URL**: https://lovable.dev/projects/fc05f877-1c4b-4eae-8c6e-41439911f075
+<p align="center">
+  <em>L'eccellenza italiana incontra la tecnologia più raffinata</em>
+</p>
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🎭 La Storia
 
-**Use Lovable**
+Un giorno mi annoiavo. Mio nonno aveva bisogno di dividere le bollette del gas tra i coinquilini.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/fc05f877-1c4b-4eae-8c6e-41439911f075) and start prompting.
+**Risultato?** Un'applicazione web con più effetti cinematografici di un film Marvel.
 
-Changes made via Lovable will be committed automatically to this repo.
+> *"Non avevo bisogno di una sirena d'allarme nucleare quando la bolletta supera i 2000€, ma eccola qui."*
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## ✨ Features
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+| Feature                          | Descrizione                                   |
+| -------------------------------- | --------------------------------------------- |
+| 🎨 **Particelle Canvas**          | Engine di particelle hardware-accelerato      |
+| 🔊 **Sound Design**               | Audio sintetizzato real-time (Web Audio API)  |
+| 🎬 **Esperienza Cinematografica** | Risultati che appaiono dopo 800ms con chime   |
+| ☢️ **Panic Mode**                 | Easter egg Fallout quando la bolletta > 2000€ |
+| 📱 **Mobile-First**               | 60fps garantiti su qualsiasi dispositivo      |
+| 📦 **Single-File**                | ~550KB, funziona offline via `file://`        |
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🎵 Colonna Sonora (Sì, ha i suoni)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- **🌅 Startup**: Basso caldo + shimmer al primo click
+- **🔔 Calcolo Completo**: "Ding-dong" soddisfacente
+- **✨ Click**: Feedback cristallino
+- **🚨 Sirena**: Allarme Fallout quando esageri
+- **🎵 PowerUp**: Arpeggio per tornare alla realtà
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 🚀 Quick Start
+
+### Opzione 1: Magic Link (GitHub Pages)
+👉 **[Apri l'App](https://<username>.github.io/calcologas/)**
+
+### Opzione 2: Download Diretto
+1. Scarica `dist/index.html`
+2. Apri il file (funziona offline!)
+
+### Opzione 3: Development
+```bash
+git clone https://github.com/<username>/calcologas.git
+cd calcologas
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🛠️ Tech Stack
 
-**Use GitHub Codespaces**
+```
+React 18 + TypeScript + Vite
+├── Tailwind CSS (styling)
+├── Framer Motion (animazioni)
+├── shadcn/ui (componenti)
+├── Web Audio API (suoni sintetizzati)
+├── HTML5 Canvas (particelle)
+└── vite-plugin-singlefile (build unico file)
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 📸 Screenshots
 
-This project is built with:
+*L'app è troppo premium per gli screenshot. Devi provarla.*
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 🎯 Easter Eggs
 
-Simply open [Lovable](https://lovable.dev/projects/fc05f877-1c4b-4eae-8c6e-41439911f075) and click on Share -> Publish.
+1. **Inserisci >2000€** nella bolletta
+2. **Guarda cosa succede** ☢️
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## ❤️ Crediti
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- **Progetto originale**: [Lovable.dev](https://lovable.dev)
+- **Ottimizzazioni folli**: Antigravity AI
+- **Motivazione**: La noia di un sabato pomeriggio
+- **Utente finale**: Nonno Bruno (che probabilmente userà solo la versione base)
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+---
+
+<p align="center">
+  <strong>Lago di Garda • Italia • 2025</strong>
+  <br/>
+  <em>Crafted with Italian Excellence™</em>
+</p>
