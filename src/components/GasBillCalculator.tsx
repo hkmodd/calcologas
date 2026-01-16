@@ -12,6 +12,7 @@ import { ParticleField } from './ParticleField';
 import { LuxuryIcon } from './LuxuryIcon';
 
 import { FinancialPanicMode } from './FinancialPanicMode';
+import { GardesanoQuote } from './GardesanoQuote';
 import { soundEngine } from '@/utils/SoundEngine';
 
 interface Person {
@@ -497,6 +498,14 @@ const GasBillCalculator = () => {
               </>
             )}
           </AnimatePresence>
+
+          {/* Detti Gardesani */}
+          <motion.div
+            variants={itemVariants}
+            className="py-6"
+          >
+            <GardesanoQuote />
+          </motion.div>
 
           {/* Footer Premium */}
           <motion.footer
