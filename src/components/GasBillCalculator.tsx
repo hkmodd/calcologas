@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,14 +10,15 @@ import { PersonConsumption } from './PersonConsumption';
 import { ResultDisplay } from './ResultDisplay';
 import { ParticleField } from './ParticleField';
 import { LuxuryIcon } from './LuxuryIcon';
+
 import { FinancialPanicMode } from './FinancialPanicMode';
+import { soundEngine } from '@/utils/SoundEngine';
 
 interface Person {
   id: string;
   name: string;
   consumption: number;
 }
-
 
 const GasBillCalculator = () => {
   const [totalBill, setTotalBill] = useState<number | string>("");
@@ -26,6 +27,10 @@ const GasBillCalculator = () => {
     { id: '1', name: 'Bruno', consumption: 190 },
     { id: '2', name: 'Daniele', consumption: 163 }
   ]);
+  const [hasPlayedStartup, setHasPlayedStartup] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const calculationTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastPriceRef = useRef<number>(0);
 
   const pricePerCubicMeter = useMemo(() => {
     const bill = Number(totalBill) || 0;
@@ -76,6 +81,55 @@ const GasBillCalculator = () => {
     return people.reduce((sum, person) => sum + person.consumption, 0);
   }, [people]);
 
+  // Startup sound effect (plays once on first user interaction)
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (!hasPlayedStartup) {
+        soundEngine.playStartup();
+        setHasPlayedStartup(true);
+        document.removeEventListener('click', handleFirstInteraction);
+        document.removeEventListener('keydown', handleFirstInteraction);
+      }
+    };
+
+    document.addEventListener('click', handleFirstInteraction);
+    document.addEventListener('keydown', handleFirstInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, [hasPlayedStartup]);
+
+  // Debounced calculation complete sound AND show results
+  useEffect(() => {
+    // Hide results immediately when price changes (user is typing)
+    if (pricePerCubicMeter !== lastPriceRef.current) {
+      setShowResults(false);
+    }
+
+    // Only set up timer if price is valid
+    if (pricePerCubicMeter > 0 && pricePerCubicMeter !== lastPriceRef.current) {
+      // Clear previous timer
+      if (calculationTimerRef.current) {
+        clearTimeout(calculationTimerRef.current);
+      }
+
+      // Set new timer - show results and play sound after 800ms of no changes
+      calculationTimerRef.current = setTimeout(() => {
+        setShowResults(true);
+        soundEngine.playCalculationComplete();
+        lastPriceRef.current = pricePerCubicMeter;
+      }, 800);
+    }
+
+    return () => {
+      if (calculationTimerRef.current) {
+        clearTimeout(calculationTimerRef.current);
+      }
+    };
+  }, [pricePerCubicMeter]);
+
   useEffect(() => {
     console.log('Calcolo bolletta gas:', {
       totale: totalBill,
@@ -87,6 +141,13 @@ const GasBillCalculator = () => {
   }, [totalBill, totalConsumption, people, pricePerCubicMeter, results]);
 
   const isPanicMode = Number(totalBill) > 2000;
+
+  // Effect for Panic Mode Siren
+  useEffect(() => {
+    if (isPanicMode) {
+      soundEngine.playSiren();
+    }
+  }, [isPanicMode]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -298,12 +359,12 @@ const GasBillCalculator = () => {
 
                 {/* Prezzo al metro cubo */}
                 <AnimatePresence>
-                  {!isPanicMode && pricePerCubicMeter > 0 && (
+                  {!isPanicMode && showResults && pricePerCubicMeter > 0 && (
                     <motion.div
                       className="relative overflow-hidden rounded-2xl"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
+                      initial={{ opacity: 0, height: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                      exit={{ opacity: 0, height: 0, scale: 0.95 }}
                     >
                       <div className="absolute inset-0 garda-sunset opacity-90" />
                       <div className="absolute inset-0 animate-shimmer-slide" />
@@ -352,7 +413,10 @@ const GasBillCalculator = () => {
               >
                 <FinancialPanicMode
                   amount={Number(totalBill)}
-                  onReset={() => setTotalBill(0)}
+                  onReset={() => {
+                    setTotalBill("");
+                    soundEngine.playPowerUp();
+                  }}
                 />
               </motion.div>
             ) : (
@@ -371,7 +435,10 @@ const GasBillCalculator = () => {
                           whileTap={{ scale: 0.95 }}
                         >
                           <Button
-                            onClick={addPerson}
+                            onClick={() => {
+                              addPerson();
+                              soundEngine.playClick();
+                            }}
                             className="garda-sunset border-0 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:shadow-italian-gold/20 transition-all duration-300"
                             size="lg"
                           >
