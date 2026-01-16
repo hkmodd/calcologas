@@ -6,12 +6,12 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { User, Flame, Euro, Trash2, Sparkles, Crown } from 'lucide-react';
+import { User, Flame, Euro, Trash2, Sparkles, Crown, Zap } from 'lucide-react';
 
 interface Person {
   id: string;
   name: string;
-  consumption: number;
+  consumption: number | string;
 }
 
 interface PersonConsumptionProps {
@@ -21,6 +21,7 @@ interface PersonConsumptionProps {
   onUpdate: (id: string, field: 'name' | 'consumption', value: string | number) => void;
   onRemove: (id: string) => void;
   canRemove: boolean;
+  isAutoCalculated?: boolean;
 }
 
 
@@ -30,9 +31,10 @@ export const PersonConsumption: React.FC<PersonConsumptionProps> = React.memo(({
   pricePerCubicMeter,
   onUpdate,
   onRemove,
-  canRemove
+  canRemove,
+  isAutoCalculated = false
 }) => {
-  const amount = person.consumption * pricePerCubicMeter;
+  const amount = (Number(person.consumption) || 0) * pricePerCubicMeter;
 
   return (
     <motion.div
@@ -129,7 +131,7 @@ export const PersonConsumption: React.FC<PersonConsumptionProps> = React.memo(({
 
             <motion.div
               className="space-y-2 md:space-y-3"
-              whileHover={{ scale: 1.01 }}
+              whileHover={{ scale: isAutoCalculated ? 1 : 1.01 }}
             >
               <Label
                 htmlFor={`consumption-${person.id}`}
@@ -137,15 +139,25 @@ export const PersonConsumption: React.FC<PersonConsumptionProps> = React.memo(({
               >
                 <Flame className="w-3.5 h-3.5 md:w-4 md:h-4 text-sunset-orange" />
                 Consumo (m³)
+                {isAutoCalculated && (
+                  <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-italian-gold/20 text-italian-gold text-xs font-medium">
+                    <Zap className="w-3 h-3" />
+                    AUTO
+                  </span>
+                )}
               </Label>
               <div className="relative group/input">
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-sunset-orange/10 to-transparent opacity-0 group-hover/input:opacity-100 transition-opacity duration-300 blur-lg" />
+                <div className={`absolute inset-0 rounded-xl bg-gradient-to-r ${isAutoCalculated ? 'from-italian-gold/10' : 'from-sunset-orange/10'} to-transparent opacity-0 group-hover/input:opacity-100 transition-opacity duration-300 blur-lg`} />
                 <Input
                   id={`consumption-${person.id}`}
                   type="number"
                   value={person.consumption}
-                  onChange={(e) => onUpdate(person.id, 'consumption', Number(e.target.value))}
-                  className="relative h-12 md:h-14 number-input bg-white/5 border-white/10 focus:border-sunset-orange/50 focus:ring-sunset-orange/20 transition-all duration-300 text-foreground text-base md:text-lg"
+                  onChange={(e) => !isAutoCalculated && onUpdate(person.id, 'consumption', e.target.value)}
+                  readOnly={isAutoCalculated}
+                  className={`relative h-12 md:h-14 number-input border-white/10 transition-all duration-300 text-foreground text-base md:text-lg ${isAutoCalculated
+                    ? 'bg-italian-gold/10 border-italian-gold/30 cursor-not-allowed text-italian-gold font-semibold'
+                    : 'bg-white/5 focus:border-sunset-orange/50 focus:ring-sunset-orange/20'
+                    }`}
                   step="0.1"
                   min="0"
                   placeholder="0"
@@ -156,7 +168,7 @@ export const PersonConsumption: React.FC<PersonConsumptionProps> = React.memo(({
 
           {/* Risultato importo */}
           <AnimatePresence>
-            {pricePerCubicMeter > 0 && person.consumption > 0 && (
+            {pricePerCubicMeter > 0 && Number(person.consumption) > 0 && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}

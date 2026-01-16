@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Calculator, Flame, Users, Euro, Plus, Waves, Mountain, Crown, Sparkles } from 'lucide-react';
+import { Calculator, Flame, Users, Euro, Plus, Waves, Mountain, Crown, Sparkles, Zap, Split, Edit3 } from 'lucide-react';
 import { PersonConsumption } from './PersonConsumption';
 import { ResultDisplay } from './ResultDisplay';
 import { ParticleField } from './ParticleField';
@@ -18,7 +18,7 @@ import { soundEngine } from '@/utils/SoundEngine';
 interface Person {
   id: string;
   name: string;
-  consumption: number;
+  consumption: number | string;
 }
 
 const GasBillCalculator = () => {
@@ -31,6 +31,11 @@ const GasBillCalculator = () => {
   const [hasPlayedStartup, setHasPlayedStartup] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Smart distribution state
+  const [distributionMode, setDistributionMode] = useState<'smart' | 'equal' | 'manual'>('smart');
+  const [lastEditedId, setLastEditedId] = useState<string | null>('1'); // Bruno starts as fixed
+
   const calculationTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastPriceRef = useRef<number>(0);
 
@@ -62,6 +67,10 @@ const GasBillCalculator = () => {
   }, []);
 
   const updatePerson = useCallback((id: string, field: 'name' | 'consumption', value: string | number) => {
+    // Track last edited for smart mode
+    if (field === 'consumption') {
+      setLastEditedId(id);
+    }
     setPeople(currentPeople => currentPeople.map(person =>
       person.id === id
         ? { ...person, [field]: value }
@@ -69,20 +78,92 @@ const GasBillCalculator = () => {
     ));
   }, []);
 
+  // Smart auto-balance calculation
+  const peopleWithAutoCalc = useMemo(() => {
+    if (people.length < 1) return people;
+
+    const total = Number(totalConsumption) || 0;
+
+    // MODE: Manual - no auto calculation
+    if (distributionMode === 'manual') {
+      return people;
+    }
+
+    // MODE: Equal - divide equally
+    if (distributionMode === 'equal') {
+      const equalShare = total / people.length;
+      return people.map(p => ({ ...p, consumption: Math.round(equalShare * 10) / 10 }));
+    }
+
+    // MODE: Smart - last edited stays fixed, others auto-balance
+    if (people.length < 2) return people;
+
+    // Find the fixed person (last edited)
+    const fixedPerson = people.find(p => p.id === lastEditedId) || people[0];
+    const fixedConsumption = Number(fixedPerson.consumption) || 0;
+    const othersCount = people.length - 1;
+
+    // Calculate remaining to distribute among others
+    const remaining = Math.max(0, total - fixedConsumption);
+    const autoShare = othersCount > 0 ? remaining / othersCount : 0;
+
+    return people.map(p => {
+      if (p.id === lastEditedId) {
+        return p; // Keep the fixed person's consumption
+      }
+      return { ...p, consumption: Math.round(autoShare * 10) / 10 };
+    });
+  }, [people, totalConsumption, distributionMode, lastEditedId]);
+
   const results = useMemo(() => {
-    return people.map(person => ({
+    return peopleWithAutoCalc.map(person => ({
       ...person,
-      amount: person.consumption * pricePerCubicMeter
+      consumption: Number(person.consumption) || 0,
+      amount: (Number(person.consumption) || 0) * pricePerCubicMeter
     }));
-  }, [people, pricePerCubicMeter]);
+  }, [peopleWithAutoCalc, pricePerCubicMeter]);
 
   const totalCalculated = useMemo(() => {
     return results.reduce((sum, result) => sum + result.amount, 0);
   }, [results]);
 
   const actualTotalConsumption = useMemo(() => {
-    return people.reduce((sum, person) => sum + person.consumption, 0);
-  }, [people]);
+    return peopleWithAutoCalc.reduce((sum, person) => sum + (Number(person.consumption) || 0), 0);
+  }, [peopleWithAutoCalc]);
+
+  // Validation warnings
+  const validationWarnings = useMemo(() => {
+    const warnings: string[] = [];
+    const total = Number(totalConsumption) || 0;
+
+    if (total === 0) {
+      warnings.push("Inserisci il consumo totale in m³");
+    }
+
+    // Only check overconsumption in smart mode
+    if (distributionMode === 'smart' && lastEditedId && total > 0) {
+      const fixedPerson = people.find(p => p.id === lastEditedId);
+      const fixedConsumption = fixedPerson ? Number(fixedPerson.consumption) || 0 : 0;
+      if (fixedConsumption > total) {
+        warnings.push(`Il consumo di ${fixedPerson?.name || 'questa persona'} (${fixedConsumption}m³) supera il totale (${total}m³)`);
+      }
+    }
+
+    // Only check zero consumption in manual mode
+    if (distributionMode === 'manual') {
+      const sumAll = people.reduce((sum, p) => sum + (Number(p.consumption) || 0), 0);
+      if (sumAll !== total && total > 0 && sumAll > 0) {
+        warnings.push(`La somma dei consumi (${sumAll}m³) non corrisponde al totale (${total}m³)`);
+      }
+      people.forEach(p => {
+        if (Number(p.consumption) === 0) {
+          warnings.push(`${p.name || 'Una persona'} ha consumo 0m³`);
+        }
+      });
+    }
+
+    return warnings;
+  }, [people, totalConsumption, distributionMode, lastEditedId]);
 
   // Startup sound effect (plays once on first user interaction)
   useEffect(() => {
@@ -320,10 +401,7 @@ const GasBillCalculator = () => {
                         id="totalBill"
                         type="number"
                         value={totalBill}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setTotalBill(val === '' ? '' : Number(val));
-                        }}
+                        onChange={(e) => setTotalBill(e.target.value)}
                         className="relative text-xl h-16 number-input bg-white/5 border-white/10 focus:border-italian-gold/50 focus:ring-italian-gold/20 transition-all duration-300 text-foreground placeholder:text-muted-foreground"
                         step="0.01"
                         min="0"
@@ -347,10 +425,7 @@ const GasBillCalculator = () => {
                         id="totalConsumption"
                         type="number"
                         value={totalConsumption}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setTotalConsumption(val === '' ? '' : Number(val));
-                        }}
+                        onChange={(e) => setTotalConsumption(e.target.value)}
                         className="relative text-xl h-16 number-input bg-white/5 border-white/10 focus:border-garda-blue/50 focus:ring-garda-blue/20 transition-all duration-300 text-foreground"
                         step="0.1"
                         min="0"
@@ -461,10 +536,47 @@ const GasBillCalculator = () => {
                           </Button>
                         </motion.div>
                       </div>
+
+                      {/* Mode Selector Buttons */}
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        <Button
+                          variant={distributionMode === 'smart' ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setDistributionMode('smart')}
+                          className={distributionMode === 'smart'
+                            ? 'bg-italian-gold hover:bg-italian-gold/90 text-black'
+                            : 'border-white/20 hover:bg-white/10'}
+                        >
+                          <Zap className="w-4 h-4 mr-1" />
+                          Auto-Bilancia
+                        </Button>
+                        <Button
+                          variant={distributionMode === 'equal' ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setDistributionMode('equal')}
+                          className={distributionMode === 'equal'
+                            ? 'bg-garda-blue hover:bg-garda-blue/90 text-white'
+                            : 'border-white/20 hover:bg-white/10'}
+                        >
+                          <Split className="w-4 h-4 mr-1" />
+                          Dividi Equo
+                        </Button>
+                        <Button
+                          variant={distributionMode === 'manual' ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setDistributionMode('manual')}
+                          className={distributionMode === 'manual'
+                            ? 'bg-muted hover:bg-muted/90'
+                            : 'border-white/20 hover:bg-white/10'}
+                        >
+                          <Edit3 className="w-4 h-4 mr-1" />
+                          Manuale
+                        </Button>
+                      </div>
                     </CardHeader>
                     <CardContent className="p-8 space-y-6">
                       <AnimatePresence mode="popLayout">
-                        {people.map((person, index) => (
+                        {peopleWithAutoCalc.map((person, index) => (
                           <motion.div
                             key={person.id}
                             initial={{ opacity: 0, y: 20 }}
@@ -483,9 +595,35 @@ const GasBillCalculator = () => {
                               onUpdate={updatePerson}
                               onRemove={removePerson}
                               canRemove={people.length > 1}
+                              isAutoCalculated={
+                                distributionMode === 'equal' ||
+                                (distributionMode === 'smart' && person.id !== lastEditedId && people.length > 1)
+                              }
                             />
                           </motion.div>
                         ))}
+                      </AnimatePresence>
+
+                      {/* Validation Warnings */}
+                      <AnimatePresence>
+                        {validationWarnings.length > 0 && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="space-y-2"
+                          >
+                            {validationWarnings.map((warning, i) => (
+                              <div
+                                key={i}
+                                className="flex items-center gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-200 text-sm"
+                              >
+                                <span className="text-amber-400">⚠️</span>
+                                {warning}
+                              </div>
+                            ))}
+                          </motion.div>
+                        )}
                       </AnimatePresence>
                     </CardContent>
                   </Card>
