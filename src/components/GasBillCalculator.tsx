@@ -30,6 +30,7 @@ const GasBillCalculator = () => {
   ]);
   const [hasPlayedStartup, setHasPlayedStartup] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const calculationTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastPriceRef = useRef<number>(0);
 
@@ -417,10 +418,18 @@ const GasBillCalculator = () => {
                 <FinancialPanicMode
                   amount={Number(totalBill)}
                   onReset={() => {
-                    startTransition(() => {
-                      setTotalBill("");
-                    });
                     soundEngine.playPowerUp();
+                    // Set transitioning to give WebView time to breathe
+                    setIsTransitioning(true);
+                    // Use double rAF to ensure clean frame
+                    requestAnimationFrame(() => {
+                      requestAnimationFrame(() => {
+                        startTransition(() => {
+                          setTotalBill("");
+                          setIsTransitioning(false);
+                        });
+                      });
+                    });
                   }}
                 />
               </motion.div>
