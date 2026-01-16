@@ -1,10 +1,11 @@
 
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { User, Flame, Euro, Trash2, Sparkles } from 'lucide-react';
+import { User, Flame, Euro, Trash2, Sparkles, Crown } from 'lucide-react';
 
 interface Person {
   id: string;
@@ -32,88 +33,162 @@ export const PersonConsumption: React.FC<PersonConsumptionProps> = ({
   const amount = person.consumption * pricePerCubicMeter;
 
   return (
-    <Card className="garda-card border-2 border-garda-light/50 hover:border-garda-blue/70 italian-hover shadow-xl hover:shadow-2xl transition-all duration-500">
-      <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="absolute inset-0 garda-gradient rounded-full animate-glow-pulse"></div>
-              <div className="relative garda-gradient p-3 rounded-full">
-                <User className="w-5 h-5 text-white animate-garda-wave" />
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 300 }}
+    >
+      <Card className="garda-card luxury-border overflow-hidden group">
+        <div className="p-6 space-y-6">
+          {/* Header della persona */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {/* Avatar con numero */}
+              <motion.div 
+                className="relative"
+                whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Glow effect */}
+                <div className="absolute inset-0 garda-gradient rounded-full blur-md opacity-50 group-hover:opacity-80 transition-opacity" />
+                
+                {/* Avatar principale */}
+                <div className="relative w-14 h-14 garda-gradient rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-xl font-bold text-white font-display">
+                    {index + 1}
+                  </span>
+                </div>
+                
+                {/* Badge animato */}
+                <motion.div
+                  className="absolute -top-1 -right-1 w-5 h-5 gold-gradient rounded-full flex items-center justify-center"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Crown className="w-3 h-3 text-white" />
+                </motion.div>
+              </motion.div>
+
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-bold garda-title font-display">
+                    Persona {index + 1}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <Sparkles className="w-3 h-3 text-italian-gold animate-pulse" />
+                  <span>Stile Gardesano Premium</span>
+                </div>
               </div>
             </div>
-            <div>
-              <span className="text-xl font-bold garda-title">Persona {index + 1}</span>
-              <div className="flex items-center gap-1 text-sm text-garda-blue">
-                <Sparkles className="w-3 h-3 animate-shimmer" />
-                <span>Stile Gardesano</span>
-              </div>
-            </div>
+
+            {/* Bottone rimuovi */}
+            {canRemove && (
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onRemove(person.id)}
+                  className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-all duration-300 rounded-full w-10 h-10 p-0"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </Button>
+              </motion.div>
+            )}
           </div>
-          {canRemove && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onRemove(person.id)}
-              className="text-destructive hover:text-destructive/80 hover:bg-destructive/10 transition-all duration-300 hover:scale-110"
+
+          {/* Input fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <motion.div 
+              className="space-y-3"
+              whileHover={{ scale: 1.01 }}
             >
-              <Trash2 className="w-5 h-5 animate-italian-bounce" />
-            </Button>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <Label htmlFor={`name-${person.id}`} className="text-base font-semibold text-garda-deep">
-              Nome
-            </Label>
-            <div className="relative group">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-garda-blue transition-all duration-300 group-hover:scale-110" />
-              <Input
-                id={`name-${person.id}`}
-                type="text"
-                value={person.name}
-                onChange={(e) => onUpdate(person.id, 'name', e.target.value)}
-                className="pl-11 h-12 border-2 border-garda-light focus:border-garda-blue transition-all duration-300 hover:shadow-md"
-                placeholder="Nome persona"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <Label htmlFor={`consumption-${person.id}`} className="text-base font-semibold text-garda-deep">
-              Consumo (m³)
-            </Label>
-            <div className="relative group">
-              <Flame className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-italian-sunset transition-all duration-300 group-hover:scale-110 animate-garda-wave" />
-              <Input
-                id={`consumption-${person.id}`}
-                type="number"
-                value={person.consumption}
-                onChange={(e) => onUpdate(person.id, 'consumption', Number(e.target.value))}
-                className="pl-11 h-12 number-input border-2 border-garda-light focus:border-garda-blue transition-all duration-300 hover:shadow-md"
-                step="0.1"
-                min="0"
-                placeholder="0"
-              />
-            </div>
-          </div>
-        </div>
-
-        {pricePerCubicMeter > 0 && person.consumption > 0 && (
-          <div className="garda-sunset p-4 rounded-xl border-2 border-italian-gold/30 animate-elegant-slide">
-            <div className="flex items-center justify-between">
-              <div className="text-white/90 font-medium">
-                {pricePerCubicMeter.toFixed(4)}€ × {person.consumption}m³
+              <Label 
+                htmlFor={`name-${person.id}`} 
+                className="text-base font-semibold text-garda-light flex items-center gap-2"
+              >
+                <User className="w-4 h-4 text-garda-blue" />
+                Nome
+              </Label>
+              <div className="relative group/input">
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-garda-blue/10 to-transparent opacity-0 group-hover/input:opacity-100 transition-opacity duration-300 blur-lg" />
+                <Input
+                  id={`name-${person.id}`}
+                  type="text"
+                  value={person.name}
+                  onChange={(e) => onUpdate(person.id, 'name', e.target.value)}
+                  className="relative h-14 bg-white/5 border-white/10 focus:border-garda-blue/50 focus:ring-garda-blue/20 transition-all duration-300 text-foreground text-lg"
+                  placeholder="Nome persona"
+                />
               </div>
-              <div className="flex items-center gap-2 text-2xl font-bold text-white">
-                <Euro className="w-6 h-6 animate-float" />
-                <span className="animate-shimmer">{amount.toFixed(2)}</span>
+            </motion.div>
+
+            <motion.div 
+              className="space-y-3"
+              whileHover={{ scale: 1.01 }}
+            >
+              <Label 
+                htmlFor={`consumption-${person.id}`} 
+                className="text-base font-semibold text-garda-light flex items-center gap-2"
+              >
+                <Flame className="w-4 h-4 text-sunset-orange" />
+                Consumo (m³)
+              </Label>
+              <div className="relative group/input">
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-sunset-orange/10 to-transparent opacity-0 group-hover/input:opacity-100 transition-opacity duration-300 blur-lg" />
+                <Input
+                  id={`consumption-${person.id}`}
+                  type="number"
+                  value={person.consumption}
+                  onChange={(e) => onUpdate(person.id, 'consumption', Number(e.target.value))}
+                  className="relative h-14 number-input bg-white/5 border-white/10 focus:border-sunset-orange/50 focus:ring-sunset-orange/20 transition-all duration-300 text-foreground text-lg"
+                  step="0.1"
+                  min="0"
+                  placeholder="0"
+                />
               </div>
-            </div>
+            </motion.div>
           </div>
-        )}
-      </div>
-    </Card>
+
+          {/* Risultato importo */}
+          <AnimatePresence>
+            {pricePerCubicMeter > 0 && person.consumption > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="relative overflow-hidden rounded-xl"
+              >
+                <div className="absolute inset-0 garda-sunset opacity-90" />
+                <div className="absolute inset-0 animate-shimmer-slide" />
+                
+                <div className="relative p-5 flex items-center justify-between">
+                  <div className="text-white/90 font-medium">
+                    <span className="text-sm opacity-80">Formula: </span>
+                    <span className="font-mono">
+                      {pricePerCubicMeter.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€ × {person.consumption}m³
+                    </span>
+                  </div>
+                  
+                  <motion.div 
+                    className="flex items-center gap-3"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <Euro className="w-7 h-7 text-white drop-shadow-lg" />
+                    <span className="text-3xl font-bold text-white font-display text-glow-gold">
+                      {amount.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </Card>
+    </motion.div>
   );
 };
