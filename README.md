@@ -42,13 +42,6 @@ Un giorno ero annoiato. Mio nonno aveva bisogno di dividere le bollette del gas 
 ## ✨ Features
 
 ### 🌊 WebGL Shader Premium
-| Effetto            | Descrizione                                |
-| ------------------ | ------------------------------------------ |
-| 🌊 **Onde Animate** | 6 layer di onde Lago di Garda che scorrono |
-| ✨ **Caustics**     | Pattern di luce sott'acqua                 |
-| 🫧 **Particelle**   | 15 elementi fluttuanti                     |
-| ⭐ **Stelle**       | Cielo stellato con twinkling               |
-| 🌅 **Horizon Glow** | Bagliore dorato all'orizzonte              |
 
 ### 🎨 Design & UX
 | Feature              | Descrizione                        |
