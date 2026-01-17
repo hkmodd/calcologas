@@ -26,7 +26,7 @@ const App = () => {
         {showSplash && (
           <SplashScreen
             onComplete={() => setShowSplash(false)}
-            minDuration={2500}
+            minDuration={1200}
           />
         )}
 
