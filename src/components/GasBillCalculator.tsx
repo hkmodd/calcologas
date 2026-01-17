@@ -211,9 +211,16 @@ const GasBillCalculator = () => {
         soundEngine.playCalculationComplete();
         lastPriceRef.current = pricePerCubicMeter;
 
-        // Auto-scroll to results
+        // Auto-scroll to results - blur first to dismiss mobile keyboard
         setTimeout(() => {
-          resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Dismiss keyboard by blurring any focused input
+          if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+          }
+          // Wait a tiny bit for keyboard to close, then scroll
+          setTimeout(() => {
+            resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 150);
         }, 100);
 
         // Trigger celebration on first calculation (but NOT in panic mode!)
