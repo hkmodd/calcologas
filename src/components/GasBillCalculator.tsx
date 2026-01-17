@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useMemo, useRef, startTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Calculator, Flame, Users, Euro, Plus, Waves, Mountain, Crown, Sparkles, Zap, Split, Edit3 } from 'lucide-react';
 import { PersonConsumption } from './PersonConsumption';
 import { ResultDisplay } from './ResultDisplay';
-import { ParticleField } from './ParticleField';
+import { AuroraBackground } from './AuroraBackground';
 import { LuxuryIcon } from './LuxuryIcon';
 
 import { FinancialPanicMode } from './FinancialPanicMode';
@@ -50,6 +49,7 @@ const GasBillCalculator = () => {
   }, [totalBill, totalConsumption]);
 
   const addPerson = useCallback(() => {
+    soundEngine.vibrateAdd();
     setPeople(currentPeople => [
       ...currentPeople,
       {
@@ -64,6 +64,7 @@ const GasBillCalculator = () => {
     setPeople(currentPeople => {
       if (currentPeople.length > 1) {
         soundEngine.playRemove();
+        soundEngine.vibrateRemove();
         return currentPeople.filter(person => person.id !== id);
       }
       return currentPeople;
@@ -275,52 +276,12 @@ const GasBillCalculator = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
-      {/* Sfondo premium con particelle */}
-      <ParticleField />
+      {/* WebGL Aurora Background */}
+      <AuroraBackground />
 
-      {/* Effetti di luce ambientali */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-garda-blue/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-italian-gold/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-garda-deep/5 rounded-full blur-3xl" />
-      </div>
+      {/* Ambient elements removed - WebGL aurora is sufficient and GPU-accelerated */}
 
-      {/* Decorazioni animate premium */}
-      <motion.div
-        className="absolute top-20 left-10 z-10"
-        animate={{
-          y: [0, -20, 0],
-          rotate: [0, 10, 0],
-          opacity: [0.2, 0.4, 0.2]
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <Mountain className="w-20 h-20 text-garda-light/30" />
-      </motion.div>
-
-      <motion.div
-        className="absolute top-40 right-16 z-10"
-        animate={{
-          y: [0, -15, 0],
-          x: [0, 10, 0],
-          opacity: [0.2, 0.5, 0.2]
-        }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <Waves className="w-16 h-16 text-garda-blue/40" />
-      </motion.div>
-
-      <motion.div
-        className="absolute bottom-32 left-20 z-10"
-        animate={{
-          y: [0, -10, 0],
-          rotate: [0, -15, 0],
-          opacity: [0.15, 0.35, 0.15]
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      >
-        <Crown className="w-14 h-14 text-italian-gold/40" />
-      </motion.div>
+      {/* Decorative elements removed for performance - WebGL aurora is sufficient */}
 
       {/* Contenuto principale */}
       <motion.div
@@ -338,14 +299,15 @@ const GasBillCalculator = () => {
           >
             {/* Badge Premium */}
             <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-gold mb-8"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-gold mb-8 border border-italian-gold/30"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+              whileHover={{ scale: 1.05 }}
             >
               <Sparkles className="w-4 h-4 text-italian-gold animate-pulse" />
-              <span className="text-sm font-medium text-italian-gold tracking-widest uppercase">
-                Premium Edition 2025
+              <span className="text-sm font-semibold text-italian-gold tracking-[0.3em] uppercase">
+                Premium Edition 2026
               </span>
               <Sparkles className="w-4 h-4 text-italian-gold animate-pulse" />
             </motion.div>
@@ -357,32 +319,68 @@ const GasBillCalculator = () => {
               animate={{ scale: 1, rotate: 0 }}
               transition={{ delay: 0.3, type: "spring", stiffness: 150, damping: 12 }}
               whileTap={{ scale: 0.9 }}
+              whileHover={{ rotate: [0, -5, 5, 0], transition: { duration: 0.5 } }}
               onClick={() => soundEngine.playPop()}
             >
               <LuxuryIcon icon={Flame} size="xl" variant="sunset" />
             </motion.div>
 
-            {/* Titolo principale */}
-            <motion.h1
-              className="text-5xl md:text-8xl font-display font-bold luxury-title mb-6"
+            {/* Titolo principale - ARTISTIC */}
+            <motion.div
+              className="relative mb-6"
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.8 }}
             >
-              Calcolatore Gas
-            </motion.h1>
+              {/* Glow effect dietro il titolo */}
+              <div className="absolute inset-0 blur-3xl opacity-30">
+                <h1 className="text-5xl md:text-8xl font-display font-bold text-garda-blue text-center">
+                  Calcolatore Gas
+                </h1>
+              </div>
+
+              {/* Titolo con gradient animato */}
+              <h1
+                className="relative text-5xl md:text-8xl font-display font-black text-center"
+                style={{
+                  background: 'linear-gradient(135deg, #fff 0%, #3FC1D5 25%, #FFD700 50%, #FF7A68 75%, #fff 100%)',
+                  backgroundSize: '300% 300%',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  animation: 'gradient-flow 8s ease infinite',
+                }}
+              >
+                Calcolatore Gas
+              </h1>
+
+              {/* Underline animata */}
+              <motion.div
+                className="h-1 mx-auto mt-4 rounded-full garda-sunset"
+                initial={{ width: 0 }}
+                animate={{ width: '60%' }}
+                transition={{ delay: 1.2, duration: 0.8, ease: 'easeOut' }}
+                style={{ maxWidth: '400px' }}
+              />
+            </motion.div>
 
             <motion.h2
-              className="text-2xl md:text-4xl font-display font-medium text-garda-light mb-4"
+              className="text-2xl md:text-4xl font-display font-medium mb-4"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.8, duration: 0.6 }}
+              style={{
+                background: 'linear-gradient(90deg, #3FC1D5, #228B9B)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
             >
               Lago di Garda Luxury Edition
             </motion.h2>
 
             <motion.p
-              className="text-lg md:text-xl text-muted-foreground italic max-w-2xl mx-auto"
+              className="text-lg md:text-xl text-muted-foreground/80 italic max-w-2xl mx-auto"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1, duration: 0.5 }}

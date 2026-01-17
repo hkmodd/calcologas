@@ -48,6 +48,9 @@ class SoundEngine {
 
         osc.start(this.context.currentTime);
         osc.stop(this.context.currentTime + 0.05);
+
+        // Crunchy haptic feedback
+        this.vibrate(15);
     }
 
     public playHover() {
@@ -343,6 +346,62 @@ class SoundEngine {
     // Error/warning haptic - longer vibration
     public vibrateError() {
         this.vibrate(100);
+    }
+
+    // Click haptic - short and crunchy
+    public vibrateClick() {
+        this.vibrate(15);
+    }
+
+    // Input focus haptic - ultra subtle
+    public vibrateInput() {
+        this.vibrate(8);
+    }
+
+    // Add person haptic - ascending burst
+    public vibrateAdd() {
+        this.vibrate([10, 20, 15, 30, 20]);
+    }
+
+    // Remove person haptic - descending
+    public vibrateRemove() {
+        this.vibrate([30, 20, 10]);
+    }
+
+    // Copy haptic - satisfying double tap
+    public vibrateCopy() {
+        this.vibrate([25, 50, 25]);
+    }
+
+    // Scroll haptic - tiny tick
+    public vibrateTick() {
+        this.vibrate(5);
+    }
+
+    // Play copy sound with haptic
+    public playCopy() {
+        this.init();
+        if (!this.context || !this.masterGain) return;
+
+        const osc = this.context.createOscillator();
+        const gain = this.context.createGain();
+
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+
+        // Quick ascending "blip" - satisfying copy sound
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, this.context.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1000, this.context.currentTime + 0.08);
+
+        gain.gain.setValueAtTime(0, this.context.currentTime);
+        gain.gain.linearRampToValueAtTime(0.3, this.context.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.context.currentTime + 0.1);
+
+        osc.start(this.context.currentTime);
+        osc.stop(this.context.currentTime + 0.1);
+
+        this.vibrateCopy();
     }
 }
 

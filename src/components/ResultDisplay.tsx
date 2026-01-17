@@ -1,10 +1,11 @@
 
-
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, AlertCircle, CheckCircle, Euro, Crown, Award, Sparkles, Gem, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { TrendingUp, AlertCircle, CheckCircle, Euro, Crown, Award, Sparkles, Gem, Star, Copy, Share2, Check } from 'lucide-react';
 import { LuxuryIcon } from './LuxuryIcon';
+import { soundEngine } from '@/utils/SoundEngine';
 
 interface Result {
   id: string;
@@ -32,10 +33,49 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = React.memo(({
   const difference = Math.abs(totalCalculated - totalBill);
   const isBalanced = difference < 0.01;
   const consumptionMatches = Math.abs(actualTotalConsumption - totalConsumption) < 0.1;
+  const [copied, setCopied] = useState(false);
 
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
+
+  const generateShareText = useCallback(() => {
+    let text = '💰 Calcolo Bolletta Gas\n\n';
+    results.forEach(r => {
+      text += `👤 ${r.name}: €${formatCurrency(r.amount)} (${r.consumption}m³)\n`;
+    });
+    text += `\n📊 Totale: €${formatCurrency(totalCalculated)}`;
+    return text;
+  }, [results, totalCalculated]);
+
+  const handleCopy = useCallback(async () => {
+    const text = generateShareText();
+
+    // Try Web Share API first (mobile-optimized)
+    if (navigator.share && /Mobi|Android/i.test(navigator.userAgent)) {
+      try {
+        await navigator.share({
+          title: 'Calcolo Bolletta Gas',
+          text: text
+        });
+        soundEngine.playCopy();
+        return;
+      } catch (e) {
+        // User cancelled or not supported, fall back to clipboard
+      }
+    }
+
+    // Fallback to clipboard
+    try {
+      await navigator.clipboard.writeText(text);
+      soundEngine.playCopy();
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      console.error('Copy failed:', e);
+      soundEngine.vibrateError();
+    }
+  }, [generateShareText]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -59,13 +99,9 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = React.memo(({
       <CardHeader className="border-b border-white/5 pb-4 md:pb-6">
         <CardTitle className="flex items-center gap-3 md:gap-4 text-xl md:text-2xl">
           <LuxuryIcon icon={TrendingUp} size="md" variant="gold" />
-          <span className="luxury-title font-display">Risultati Premium</span>
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          >
-            <Gem className="w-5 h-5 md:w-6 md:h-6 text-italian-gold" />
-          </motion.div>
+          <span className="luxury-title font-display">Risultati</span>
+          {/* CSS-only rotation for performance */}
+          <Gem className="w-5 h-5 md:w-6 md:h-6 text-italian-gold animate-spin-slow" />
         </CardTitle>
       </CardHeader>
 
@@ -81,13 +117,10 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = React.memo(({
             >
               <div className="absolute inset-0 bg-gradient-to-r from-sunset-orange via-italian-gold to-sunset-orange opacity-90" />
               <div className="relative p-4 md:p-6 flex flex-col md:flex-row items-start gap-4">
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="hidden md:block"
-                >
+                {/* Static icon - no infinite animation */}
+                <div className="hidden md:block">
                   <AlertCircle className="w-7 h-7 text-white flex-shrink-0" />
-                </motion.div>
+                </div>
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <AlertCircle className="w-5 h-5 text-white flex-shrink-0 md:hidden" />
@@ -105,9 +138,53 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = React.memo(({
 
         {/* Lista risultati per persona */}
         <div className="space-y-4">
-          <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
-            <Crown className="w-5 h-5 md:w-6 md:h-6 text-italian-gold" />
-            <h3 className="text-xl md:text-2xl font-bold garda-title font-display">Importo per Persona</h3>
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-4 md:mb-6">
+            <div className="flex items-center gap-2 md:gap-3">
+              <Crown className="w-5 h-5 md:w-6 md:h-6 text-italian-gold" />
+              <h3 className="text-xl md:text-2xl font-bold garda-title font-display">Importo per Persona</h3>
+            </div>
+
+            {/* Copy/Share Button */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                onClick={handleCopy}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${copied
+                  ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                  : 'bg-italian-gold/20 hover:bg-italian-gold/30 text-italian-gold border border-italian-gold/30'
+                  }`}
+                size="sm"
+              >
+                <AnimatePresence mode="wait">
+                  {copied ? (
+                    <motion.div
+                      key="check"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="flex items-center gap-2"
+                    >
+                      <Check className="w-4 h-4" />
+                      <span className="hidden md:inline">Copiato!</span>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="copy"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="flex items-center gap-2"
+                    >
+                      <Share2 className="w-4 h-4 md:hidden" />
+                      <Copy className="w-4 h-4 hidden md:block" />
+                      <span className="hidden md:inline">Copia Risultato</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Button>
+            </motion.div>
           </div>
 
           <motion.div
@@ -261,7 +338,7 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = React.memo(({
                 <div>
                   <p className="text-emerald-400 font-bold text-lg md:text-xl mb-1 font-display">Perfetto Equilibrio!</p>
                   <p className="text-emerald-300/80 text-sm md:text-lg">
-                    I conti tornano alla perfezione, stile Lago di Garda Premium!
+                    I conti tornano alla perfezione!
                   </p>
                 </div>
                 <motion.div
